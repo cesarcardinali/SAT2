@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<Products>
+  <product>
+    <name>Bounce M</name>
+    <product_ids>MPK24.107-54 MCK24.159 MCK24.165</product_ids>
+    <releases>MPK24.107-54 MCK24.159 MCK24.165</releases>
+    <til>nao_tem</til>
+    <dashboard_link>http://idart.mot.com/secure/Dashboard.jspa?selectPageId=43374</dashboard_link>
+    <spreadsheet_link>nao usa</spreadsheet_link>
+    <add_chart>true</add_chart>
+    <separated_charts>true</separated_charts>
+    <chart_build>MPK24.107-54 MCK24.159 MCK24.165</chart_build>
+    <issues>IKSWM-13084
+IKSWM-12951
+IKSWM-15775
+IKSWM-23105
+IKSWM-24304
+IKSWM-4987
+IKSWM-18123
+IKSWM-16563
+IKSWM-24510
+IKSWM-25330
+IKSWM-24510</issues>
+    <issues_user>IKSWM-22444
+IKSWM-21314
+IKSWM-18117
+IKSWM-11903
+IKSWM-4987
+IKSWM-16761
+IKSWM-25368
+IKSWM-16563
+IKSWM-13084
+IKSWM-25773
+IKSWM-4730
+IKSWM-24510
+IKSWM-24510</issues_user>
+    <add_highligths>false</add_highligths>
+    <highligths />
+  </product>
+  <product>
+    <name>Athene</name>
+    <product_ids>MPJ24.124</product_ids>
+    <releases>MPJ24.124</releases>
+    <til>cd_top_athene</til>
+    <dashboard_link>http://idart.mot.com/secure/Dashboard.jspa?selectPageId=43268</dashboard_link>
+    <spreadsheet_link />
+    <add_chart>true</add_chart>
+    <separated_charts>false</separated_charts>
+    <chart_build>MPJ24.124</chart_build>
+    <issues>IKSWM-20961
+IKSWM-18123
+IKSWM-18456
+IKSWM-18232
+IKSWM-18232
+IKSWM-21996
+IKSWM-18456
+IKSWM-20961
+IKSWM-25822
+IKSWM-24078
+IKSWM-24853
+IKSWM-12683
+IKSWM-25206
+IKSWM-23133</issues>
+    <issues_user />
+    <add_highligths>true</add_highligths>
+    <highligths>IKSWM-18456 - Kernel wakelock: IPA_WS
+ IKSWM-20961 - Kernel wakelock: msm_otg
+ IKSWM-18232 - DIAG_WS wake up source</highligths>
+  </product>
+</Products>

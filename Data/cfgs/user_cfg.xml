@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<SAT>
+  <parser_pane>
+    <rootPath>C:\SAT\CRs</rootPath>
+  </parser_pane>
+  <crs_jira_pane>
+    <path>C:\SAT\CRs\IKUT-851788\BT</path>
+    <assign>false</assign>
+    <label>false</label>
+    <labels>cd_auto</labels>
+    <download>true</download>
+    <unzip>true</unzip>
+    <analyze>false</analyze>
+    <close>false</close>
+    <ignore>false</ignore>
+    <unassign>false</unassign>
+    <rem_label>false</rem_label>
+  </crs_jira_pane>
+  <option_pane>
+    <full_log>- The process *#pname#* was consuming *~#avgconsume#* of CPU processing power.\n{noformat}\n#logfull#\n{noformat}</full_log>
+    <screen_off>- The process *#pname#* was consuming *~#scoffconsume#* of CPU processing power while screen was off.\n{noformat}\n#logoff#\n{noformat}</screen_off>
+    <screen_on>- The process *#pname#* was consuming *~#sconconsume#* of CPU processing power while screen was on.\n{noformat}\n#logon#\n{noformat}</screen_on>
+    <high_current>- High current while screen is off:</high_current>
+    <krnl_wkl>- Continuous Kernel wakelock by:</krnl_wkl>
+    <java_wkl>- Continuous JAVA wakelock by:</java_wkl>
+    <suspicious_header>- Wake locks detected:</suspicious_header>
+    <suspicious>- *#pname#* causes tag *#tag#* to acquire and hold PowerManagerService.Wakelock for #duration# draining battery life.\n{noformat}\n#log#\n{noformat}</suspicious>
+    <kernel_wl>- *Continuous wakelock:*</kernel_wl>
+    <java_wl>- *Continuous JAVA wakelock:*</java_wl>
+    <alarms>- The process *#pname#* is triggering too many alarm wake-ups.\n{panel}\n#log#\n{panel}</alarms>
+    <b2g>- *Bug2Go* held the PowerManagerService, contributing to the high current. This is a WAD behavior, since Bug2Go won't be delivered to the end user.\n{panel}\n#log#\n{panel}</b2g>
+    <tether>- The user is *tethering a Wifi* network. Thus, this CR can be considered invalid for current drain analysis.\n#log#\n</tether>
+    <diag>- The DIAG_WS wakelock:\n{panel}\n#log#\n{panel}\n\nDuplicated of #dupcr#</diag>
+    <editor>1</editor>
+    <wwrap>0</wwrap>
+    <tree_breakdown>2</tree_breakdown>
+    <uname>cesarc</uname>
+    <encrypt_len>16</encrypt_len>
+    <remember>true</remember>
+  </option_pane>
+  <bat_cap>
+    <clark>3000</clark>
+    <condor>1980</condor>
+    <falcon>2070</falcon>
+    <ghost>2200</ghost>
+    <kinzie>3760</kinzie>
+    <lux>3630</lux>
+    <osprey>2470</osprey>
+    <otus>2390</otus>
+    <peregrine>2070</peregrine>
+    <quantum>3900</quantum>
+    <quark>3900</quark>
+    <shamu>3220</shamu>
+    <surnia>2390</surnia>
+    <thea>2390</thea>
+    <titan>2070</titan>
+    <victara>2300</victara>
+    <merlin>2470</merlin>
+    <athene>3000</athene>
+    <griffin>3490</griffin>
+    <SHERIDAN>2750</SHERIDAN>
+    <GRIFFIN>3490</GRIFFIN>
+    <sheridan>2750</sheridan>
+  </bat_cap>
+  <diag_dup>
+    <surnia>IKSWL-1063</surnia>
+    <otus>IKUT-4329</otus>
+    <thea>IKUT-4329</thea>
+    <shamu>IKUT-4329</shamu>
+    <titan>IKUT-4329</titan>
+    <ghost>IKUT-4329</ghost>
+    <victara>IKUT-4329</victara>
+    <peregrine>IKUT-4329</peregrine>
+    <falcon>IKUT-4329</falcon>
+    <condor>IKUT-4329</condor>
+    <kinzie>IKUT-4329</kinzie>
+    <osprey>IKUT-4329</osprey>
+    <lux>IKSWL-1063</lux>
+    <quark>IKUT-4329</quark>
+    <clark>IKUT-4329</clark>
+    <merlin>IKUT-00000</merlin>
+    <athene>IKUT-00000</athene>
+    <griffin>IKUT-00000</griffin>
+  </diag_dup>
+</SAT>

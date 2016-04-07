@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<SAT>
+  <messages>
+    <new_version>New version available. Would you like to update it now?</new_version>
+  </messages>
+  <tittles>
+    <new_version>New version available.</new_version>
+  </tittles>
+  <logs />
+</SAT>

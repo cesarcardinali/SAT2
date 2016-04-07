@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<SAT>
+  <!-- User defined filters: ! -->
+  <myFilters>
+    <item_1>
+      <name>errors</name>
+      <regex>.*error.*</regex>
+      <header>Errors:</header>
+      <owner>cesarc</owner>
+      <main>true</main>
+      <system>true</system>
+      <kernel>true</kernel>
+      <radio>false</radio>
+      <bugreport>false</bugreport>
+      <routput>false</routput>
+      <shared>false</shared>
+      <editable>false</editable>
+      <active>false</active>
+      <last_update>2016-02-29 07:06:36</last_update>
+    </item_1>
+    <item_2>
+      <name>radio</name>
+      <regex>.*DATA_REGISTRATION.*</regex>
+      <header>Radio Network</header>
+      <owner>cesarc</owner>
+      <main>false</main>
+      <system>false</system>
+      <kernel>false</kernel>
+      <radio>true</radio>
+      <bugreport>false</bugreport>
+      <routput>false</routput>
+      <shared>true</shared>
+      <editable>false</editable>
+      <active>false</active>
+      <last_update>2016-02-29 06:59:27</last_update>
+    </item_2>
+    <item_3>
+      <name>SQL Messages</name>
+      <regex>.*(sql|SQL).*(ERRORS?|Errors?|errors?).*</regex>
+      <header>SQL messages at Main log:</header>
+      <owner>cesarc</owner>
+      <main>true</main>
+      <system>false</system>
+      <kernel>false</kernel>
+      <radio>false</radio>
+      <bugreport>true</bugreport>
+      <routput>false</routput>
+      <shared>true</shared>
+      <editable>false</editable>
+      <active>false</active>
+      <last_update>2016-03-01 10:13:09</last_update>
+    </item_3>
+  </myFilters>
+  <!-- Users shared filters: ! -->
+  <sharedFilters>
+    <item_1>
+      <name>Active Wakeup</name>
+      <regex>active wakeup</regex>
+      <header>- Active Wakeup Sources:</header>
+      <owner>Public</owner>
+      <main>false</main>
+      <system>false</system>
+      <kernel>true</kernel>
+      <radio>false</radio>
+      <bugreport>false</bugreport>
+      <routput>false</routput>
+      <shared>true</shared>
+      <editable>false</editable>
+      <active>false</active>
+      <last_update>2015-09-08 10:40:50</last_update>
+    </item_1>
+    <item_2>
+      <name>SQL Lite</name>
+      <regex>.*sqlite.*</regex>
+      <header />
+      <owner>andremar</owner>
+      <main>true</main>
+      <system>true</system>
+      <kernel>true</kernel>
+      <radio>true</radio>
+      <bugreport>true</bugreport>
+      <routput>false</routput>
+      <shared>true</shared>
+      <editable>false</editable>
+      <active>false</active>
+      <last_update>2016-03-01 12:05:47</last_update>
+    </item_2>
+    <item_3>
+      <name>radio</name>
+      <regex>.*DATA_REGISTRATION.*</regex>
+      <header>Radio Network</header>
+      <owner>wmarques</owner>
+      <main>false</main>
+      <system>false</system>
+      <kernel>false</kernel>
+      <radio>true</radio>
+      <bugreport>false</bugreport>
+      <routput>false</routput>
+      <shared>true</shared>
+      <editable>false</editable>
+      <active>false</active>
+      <last_update>2016-04-04 02:18:18</last_update>
+    </item_3>
+    <item_4>
+      <name>SQL Messages</name>
+      <regex>.*(sql|SQL).*(ERRORS?|Errors?|errors?).*</regex>
+      <header>SQL messages at Main log:</header>
+      <owner>wmarques</owner>
+      <main>true</main>
+      <system>false</system>
+      <kernel>false</kernel>
+      <radio>false</radio>
+      <bugreport>true</bugreport>
+      <routput>false</routput>
+      <shared>true</shared>
+      <editable>false</editable>
+      <active>false</active>
+      <last_update>2016-04-04 02:18:18</last_update>
+    </item_4>
+  </sharedFilters>
+  <!-- Active filters: ! -->
+  <activeFilters>
+    <item_1>
+      <name>errors</name>
+      <regex>.*error.*</regex>
+      <header>Errors:</header>
+      <owner>cesarc</owner>
+      <main>true</main>
+      <system>true</system>
+      <kernel>true</kernel>
+      <radio>false</radio>
+      <bugreport>false</bugreport>
+      <routput>false</routput>
+      <shared>false</shared>
+      <editable>false</editable>
+      <active>false</active>
+      <last_update>2016-02-29 07:06:36</last_update>
+    </item_1>
+    <item_2>
+      <name>radio</name>
+      <regex>.*DATA_REGISTRATION.*</regex>
+      <header>Radio Network</header>
+      <owner>cesarc</owner>
+      <main>false</main>
+      <system>false</system>
+      <kernel>false</kernel>
+      <radio>true</radio>
+      <bugreport>false</bugreport>
+      <routput>false</routput>
+      <shared>true</shared>
+      <editable>false</editable>
+      <active>false</active>
+      <last_update>2016-02-29 06:59:27</last_update>
+    </item_2>
+    <item_3>
+      <name>SQL Messages</name>
+      <regex>.*(sql|SQL).*(ERRORS?|Errors?|errors?).*</regex>
+      <header>SQL messages at Main log:</header>
+      <owner>cesarc</owner>
+      <main>true</main>
+      <system>false</system>
+      <kernel>false</kernel>
+      <radio>false</radio>
+      <bugreport>true</bugreport>
+      <routput>false</routput>
+      <shared>true</shared>
+      <editable>false</editable>
+      <active>false</active>
+      <last_update>2016-03-01 10:13:09</last_update>
+    </item_3>
+  </activeFilters>
+</SAT>

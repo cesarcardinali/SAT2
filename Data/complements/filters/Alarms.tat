@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<TextAnalysisTool.NET version="2006-12-04" showOnlyFilteredLines="True">
+  <filters>
+    <filter enabled="n" excluding="n" color="006400" type="matches_text" case_sensitive="n" regex="n" text="LocationManagerService: handleLocationChanged for" />
+    <filter enabled="y" excluding="n" color="00008b" type="matches_text" case_sensitive="n" regex="n" text="AlarmManager: send" />
+    <filter enabled="y" excluding="y" type="matches_text" case_sensitive="n" regex="y" text="type 2.+android}" />
+    <filter enabled="y" excluding="y" type="matches_text" case_sensitive="n" regex="y" text="type 3.+android}" />
+    <filter enabled="y" excluding="y" type="matches_text" case_sensitive="n" regex="y" text="type 1.+android}" />
+    <filter enabled="n" excluding="n" color="808000" type="matches_text" case_sensitive="n" regex="y" text="type.+com.google.android.gms}" />
+  </filters>
+</TextAnalysisTool.NET>

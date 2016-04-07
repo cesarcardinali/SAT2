@@ -1,0 +1,33 @@
+# Java/Eclipse files to ignore
+*.class
+.settings/
+.bin/
+
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+
+# Package Files #
+*.war
+*.ear
+
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+
+# Specific project files to be ignored
+*.txt
+*.btd
+*.log
+src/tests/*.java
+Data/cfgs/pass.pwd
+SAT.jar
+SAT_Updater.jar
+/TestDataCRs/
+/TestDataCRs/*.*
+/btdTestData/
+/bin/
+*.log
+/

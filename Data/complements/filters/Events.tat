@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<TextAnalysisTool.NET version="2006-12-04" showOnlyFilteredLines="False">
+  <filters>
+    <filter enabled="y" excluding="n" color="800000" type="matches_text" case_sensitive="n" regex="n" text="screen_toggled:" />
+  </filters>
+</TextAnalysisTool.NET>

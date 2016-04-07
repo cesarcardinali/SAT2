@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<TextAnalysisTool.NET version="2015-01-07" showOnlyFilteredLines="False">
+  <filters>
+    <filter enabled="y" excluding="n" type="matches_text" case_sensitive="n" regex="n" text="PowerManagerService: acquireWakeLockInternal:" />
+    <filter enabled="y" excluding="n" type="matches_text" case_sensitive="n" regex="n" text="PowerManagerService: releaseWakeLockInternal: " />
+  </filters>
+</TextAnalysisTool.NET>

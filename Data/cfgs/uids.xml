@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<SAT>
+  <!-- Known UIDs: !-->
+  <Known>
+    <u_1000>android</u_1000>
+    <u_1010>wifi</u_1010>
+    <u_2000>com.android.shell</u_2000>
+    <u_9341>com.motorola.storageoptimizer</u_9341>
+    <u_0>root</u_0>
+    <u_1008>com.motorola.slpc</u_1008>
+    <u_1007>com.motorola.bug2go</u_1007>
+    <u_1006>camera</u_1006>
+    <u_1027>com.android.nfc</u_1027>
+    <u_1003>graphics</u_1003>
+    <u_1002>com.android.bluetooth</u_1002>
+    <u_1013>media</u_1013>
+    <u_1001>com.android.phone</u_1001>
+  </Known>
+  <!-- UIDs to be ignored: !-->
+  <IgnoreUIDs />
+</SAT>

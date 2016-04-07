@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<TextAnalysisTool.NET version="2006-12-04" showOnlyFilteredLines="True">
+  <filters>
+    <filter enabled="y" excluding="n" type="matches_text" case_sensitive="n" regex="n" text="-----  SYSTEM -------------------------------------------------------------------------------------------------------------------------------------------------------" />
+    <filter enabled="y" excluding="n" color="800000" type="matches_text" case_sensitive="n" regex="n" text="ConnectivityService: WiFi Tethered already!" />
+    <filter enabled="n" excluding="n" color="008b8b" type="matches_text" case_sensitive="n" regex="n" text="Tether" />
+    <filter enabled="y" excluding="n" color="00008b" type="matches_text" case_sensitive="n" regex="n" text="tag=&quot;BUG2GO-UploadWorker&quot;" />
+    <filter enabled="y" excluding="n" color="00008b" type="matches_text" case_sensitive="n" regex="n" text="tag=BUG2GO-UploadWorker" />
+    <filter enabled="y" excluding="n" color="0000ff" type="matches_text" case_sensitive="n" regex="n" text="PowerManagerService: Suspicious wakelock held" />
+    <filter enabled="y" excluding="y" type="matches_text" case_sensitive="n" regex="n" text="&quot;aon_charging&quot;" />
+    <filter enabled="y" excluding="y" type="matches_text" case_sensitive="n" regex="n" text="aon_charging" />
+    <filter enabled="y" excluding="y" type="matches_text" case_sensitive="n" regex="n" text="PhoneApp" />
+  </filters>
+</TextAnalysisTool.NET>

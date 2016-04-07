@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<SAT>
+  <configs>
+    <tool_name>Search Analysis Tool</tool_name>
+    <tool_version>v1.0</tool_version>
+    <tool_file>SAT.jar</tool_file>
+    <updater>SAT_Updater.jar</updater>
+    <content_folder>Data/</content_folder>
+    <sys_config>cfgs/system_cfg.xml</sys_config>
+    <usr_config>cfgs/user_cfg.xml</usr_config>
+    <pwd_config>cfgs/pass.pwd</pwd_config>
+    <pics_folder>pics/</pics_folder>
+    <logs_folder>logs/</logs_folder>
+    <db_server>172.16.20.15/sat_db</db_server>
+    <debug_mode>true</debug_mode>
+    <!-- Updater cfgs -->
+    <update_path1>S:/Rio_Itu/SAT Test/</update_path1>
+    <update_path2>S:/Rio_Itu/Temporário/Cesar/SAT/</update_path2>
+    <clean_install>false</clean_install>
+    <overwrite_usr_cfg>true</overwrite_usr_cfg>
+  </configs>
+</SAT>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<TextAnalysisTool.NET version="2006-12-04" showOnlyFilteredLines="True">
+  <filters>
+    <filter enabled="n" excluding="n" color="006400" type="matches_text" case_sensitive="n" regex="n" text="wlan_suspend: Fail wlan suspend" />
+    <filter enabled="n" excluding="n" color="00008b" type="matches_text" case_sensitive="n" regex="n" text="Unexpected heartbeat timer" />
+    <filter enabled="n" excluding="n" color="00008b" type="matches_text" case_sensitive="n" regex="n" text="Received Heart Beat Failure" />
+    <filter enabled="n" excluding="n" color="006400" type="matches_text" case_sensitive="n" regex="n" text="Not able to suspend wlan" />
+    <filter enabled="n" excluding="n" color="008000" type="matches_text" case_sensitive="n" regex="n" text="failed to suspend" />
+    <filter enabled="n" excluding="n" color="ff0000" type="matches_text" case_sensitive="n" regex="n" text="DHCP failed on wlan" />
+    <filter enabled="n" excluding="n" type="matches_text" case_sensitive="n" regex="n" text="suspend_backoff" />
+    <filter enabled="y" excluding="n" color="800080" type="matches_text" case_sensitive="n" regex="n" text="gic_" />
+    <filter enabled="y" excluding="n" color="ff0000" type="matches_text" case_sensitive="n" regex="n" text="fail" />
+    <filter enabled="n" excluding="n" color="800080" type="matches_text" case_sensitive="n" regex="n" text="erro" />
+  </filters>
+</TextAnalysisTool.NET>
