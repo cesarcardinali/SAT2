@@ -55,10 +55,10 @@ public class OldCRsCloser implements Runnable
 	                e.printStackTrace();
                 }
 				
-				if (SharedObjs.crsManagerPane.getLabels().length > 0)
+				if (SharedObjs.crsManagerModel.getLabels().length > 0)
 				{
 					SharedObjs.crsManagerPane.addLogLine("Adding labels");
-					String output = jira.addLabel(cr, SharedObjs.crsManagerPane.getLabels());
+					String output = jira.addLabel(cr, SharedObjs.crsManagerModel.getLabels());
 					if (output.contains("error"))
 					{
 						SharedObjs.crsManagerPane.addLogLine("ERROR Adding labels! ");

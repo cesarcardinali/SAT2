@@ -329,7 +329,7 @@ public class FileTree extends JPanel
 				if (selectedPath.isDirectory())
 				{
 					// The setText method below will also "call" textPath's insertUpdate (Document listener)
-					SharedObjs.crsManagerPane.getTextPath().setText(selectedPath.toString());
+					SharedObjs.crsManagerPane.setTextPath(selectedPath.toString());
 					
 					Logger.log(Logger.TAG_FILETREE, "Changing download path to " + selectedPath);
 				}

@@ -27,7 +27,6 @@ import java.io.PrintWriter;
 import java.net.URI;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -50,16 +49,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.json.simple.parser.ParseException;
-
-import supportive.Bug2goDownloader;
-import supportive.OldCRsCloser;
-import supportive.JiraSatApi;
 import core.Logger;
 import core.SharedObjs;
 import core.XmlMngr;
-import customobjects.CrItem;
-import customobjects.CrItemsList;
 
 
 @SuppressWarnings("serial")
@@ -68,29 +60,25 @@ public class CrsManagerPane extends JPanel
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Variables -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	private JTextArea   textDownload;
-	private JTextField  textPath;
-	private JTextField  textLabels;
-	private JTextPane   textLog;
-	private JTextPane   textPane;
-	private JCheckBox   chckbxAssign;
-	private JCheckBox   chckbxLabels;
-	private JCheckBox   chckbxUnassign;
-	private JCheckBox   chckbxRemLabels;
-	private JCheckBox   chckbxDownload;
-	private JCheckBox   chckbxUnzip;
-	private JCheckBox   chckbxAnalyze;
-	private JCheckBox   chckbxCloseAsOld;
-	private JCheckBox   chckbxIgnoreAnalyzed;
-	private String      CRs[];
-	private String      labels[];
-	private int         errors;
-	private JButton     btnDownload;
-	private CrItemsList ignoredList;
-	private JButton btnOpenOnBrowser;
-	private JButton btnLists;
-	private JButton btnClear;
-	private JCheckBox btnPaste;
+	private JTextArea  textDownload;
+	private JTextField textPath;
+	private JTextField textLabels;
+	private JTextPane  textLog;
+	private JTextPane  textPane;
+	private JCheckBox  chckbxAssign;
+	private JCheckBox  chckbxLabels;
+	private JCheckBox  chckbxUnassign;
+	private JCheckBox  chckbxRemLabels;
+	private JCheckBox  chckbxDownload;
+	private JCheckBox  chckbxUnzip;
+	private JCheckBox  chckbxAnalyze;
+	private JCheckBox  chckbxCloseAsOld;
+	private JCheckBox  chckbxIgnoreAnalyzed;
+	private JCheckBox  btnPaste;
+	private JButton    btnOpenOnBrowser;
+	private JButton    btnLists;
+	private JButton    btnClear;
+	private JButton    btnDownload;
 	
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Constructor -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -436,7 +424,7 @@ public class CrsManagerPane extends JPanel
 		textPane.setMinimumSize(new Dimension(50, 42));
 		
 		loadUserData();
-		errors = 0;
+		// errors = 0;
 	}
 	
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -471,7 +459,7 @@ public class CrsManagerPane extends JPanel
 	{
 		textPath.getDocument().addDocumentListener(dl);
 	}
-
+	
 	public void chckbxDownloadAddChangeListener(ChangeListener cl)
 	{
 		chckbxDownload.addChangeListener(cl);
@@ -507,9 +495,6 @@ public class CrsManagerPane extends JPanel
 		chckbxCloseAsOld.addChangeListener(cl);
 	}
 	
-	
-	
-	
 	public void setupActions()
 	{
 		btnLists.addActionListener(new ActionListener()
@@ -543,7 +528,7 @@ public class CrsManagerPane extends JPanel
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				btnDownloadAction();
+				// btnDownloadAction();
 			}
 		});
 		btnOpenOnBrowser.addActionListener(new ActionListener()
@@ -661,148 +646,6 @@ public class CrsManagerPane extends JPanel
 	}
 	
 	/**
-	 * Download CRs
-	 * 
-	 * main download function
-	 * @throws ParseException
-	 */
-	private void downloadCRs() throws ParseException
-	{
-		errors = 0;
-		
-		// Setup jira connection
-		SharedObjs.crsManagerPane.addLogLine("Connecting to Jira ...");
-		JiraSatApi jira = new JiraSatApi(JiraSatApi.DEFAULT_JIRA_URL, SharedObjs.getUser(), SharedObjs.getPass());
-		
-		// Get the CRs list
-		CRs = textDownload.getText().replaceAll(" ", "").split("\n");
-		
-		Logger.log(Logger.TAG_CRSMANAGER, "CRs List:" + CRs.length);
-		if (CRs.length == 0 || (CRs.length == 1 && !CRs[0].contains("-")))
-		{
-			SharedObjs.crsManagerPane.addLogLine("CRs list empty");
-			enableOptionsAndBtns();
-			return;
-		}
-		
-		ArrayList<String> b2gList = new ArrayList<String>();
-		
-		// Get label list
-		labels = textLabels.getText().split(" ");
-		for (String s : labels)
-		{
-			Logger.log(Logger.TAG_CRSMANAGER, "Label entered: " + s);
-		}
-		
-		SharedObjs.crsManagerPane.addLogLine("Acquiring " + CRs.length + " CRs data ...");
-		SharedObjs.getCrsList().clear();
-		
-		// Manage CR
-		int crsCount = 0;
-		ignoredList = new CrItemsList();
-		for (String crKey : CRs)
-		{
-			crKey = trimCR(crKey);
-			if (crKey.equals(""))
-			{
-				SharedObjs.crsManagerPane.addLogLine("CR list is empty");
-				return;
-			}
-			
-			CrItem crItem = jira.getCrData(crKey);
-			++crsCount;
-			
-			if (crItem != null)
-			{
-				if (chckbxIgnoreAnalyzed.isSelected())
-				{
-					if (crItem.getLabels().contains("sat_pre_analyzed"))
-					{
-						addLogLine(crsCount + " - " + crKey + " - Will not be analyzed");
-						ignoredList.add(crItem);
-					}
-				}
-				
-				addLogLine(crsCount + " - " + crKey + " - got it");
-				
-				if (chckbxLabels.isSelected())
-				{
-					jira.assignIssue(crKey);
-					jira.addLabel(crKey, labels);
-					
-					if (chckbxAssign.isSelected())
-					{
-						crItem.setAssignee(SharedObjs.getUser());
-					}
-					else
-					{
-						crItem.setAssignee("");
-						jira.unassignIssue(crKey);
-					}
-				}
-				else if (chckbxAssign.isSelected())
-				{
-					jira.assignIssue(crKey);
-					crItem.setAssignee(SharedObjs.getUser());
-				}
-				
-				SharedObjs.addCrToList(crItem);
-				b2gList.add(crItem.getB2gID());
-			}
-			else
-			{
-				Logger.log(Logger.TAG_CRSMANAGER, "CR KEY: " + crKey + " seems not to exist. Or your user/password is wrong");
-				SharedObjs.crsManagerPane.addLogLine("CR KEY: " + crKey + " seems not to exist. Or your user/password is wrong");
-				errors++;
-			}
-		}
-		
-		if (chckbxDownload.isSelected())
-			if (b2gList.size() > 0)
-			{
-				// Configure the B2gDownloader
-				Bug2goDownloader b2gDownloader = Bug2goDownloader.getInstance();
-				
-				if (b2gDownloader.getExecutor() == null || b2gDownloader.getExecutor().isTerminated())
-				{
-					SharedObjs.crsManagerPane.addLogLine("Generating download list ...");
-				}
-				else
-				{
-					SharedObjs.crsManagerPane.addLogLine("New b2g files added to download list ...");
-				}
-				
-				try
-				{
-					b2gDownloader.addBugIdList(b2gList);
-					b2gDownloader.setError(errors);
-				}
-				catch (InterruptedException e)
-				{
-					e.printStackTrace();
-				}
-				
-				// Start download thread
-				b2gDownloader.execute();
-			}
-			else
-			{
-				if (ignoredList.size() == CRs.length)
-				{
-					JOptionPane.showMessageDialog(SharedObjs.crsManagerPane, "All the CRs in the list were ignored.");
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(SharedObjs.crsManagerPane, "There were errors during the b2g collection."
-					                                                         + "\nWe could not get CRs data from Jira."
-					                                                         + "\nYour pass or username may be wrong or " + "the CRs sent does not exist.");
-				}
-			}
-		
-		enableOptionsAndBtns();
-	}
-	
-	/**
 	 * Interface functions -------------------------------
 	 */
 	private void btnClearAction()
@@ -834,224 +677,6 @@ public class CrsManagerPane extends JPanel
 			Logger.log(Logger.TAG_CRSMANAGER, ex.getMessage());
 			ex.printStackTrace();
 		}
-	}
-	
-	private void btnDownloadAction()
-	{
-		disableOptionsAndBtns();
-		
-		new Thread(new Runnable()
-		{
-			
-			@Override
-			public void run()
-			{
-				try
-				{
-					// Download proccess
-					if (chckbxDownload.isSelected())
-					{
-						File downloadPath = new File(textPath.getText().replace("\\", "/"));
-						if (!downloadPath.exists())
-							downloadPath.mkdir();
-						
-						downloadCRs();
-					}
-					
-					// Close as old proccess
-					else if (chckbxCloseAsOld.isSelected())
-					{
-						OldCRsCloser closer = new OldCRsCloser(textDownload.getText().split("\n"));
-						new Thread(closer).start();
-					}
-					
-					// Singular options solo definition
-					else
-					{
-						// Get the CRs list
-						SharedObjs.crsManagerPane.addLogLine("Ganerating CRs list...");
-						CRs = textDownload.getText().replaceAll(" ", "").split("\n");
-						
-						// Check if not empty list
-						Logger.log(Logger.TAG_CRSMANAGER, "CRs List:" + CRs.length);
-						if (CRs.length == 0 || (CRs.length == 1 && !CRs[0].contains("-")))
-						{
-							SharedObjs.crsManagerPane.addLogLine("CRs list empty");
-							enableOptionsAndBtns();
-							return;
-						}
-						
-						// Setup jira connection
-						SharedObjs.crsManagerPane.addLogLine("Connecting to Jira ...");
-						JiraSatApi jira = new JiraSatApi(JiraSatApi.DEFAULT_JIRA_URL, SharedObjs.getUser(), SharedObjs.getPass());
-						
-						// Assign CRs
-						if (chckbxAssign.isSelected())
-						{
-							// If need to add labels too, do it at same time
-							if (chckbxLabels.isSelected())
-							{
-								SharedObjs.crsManagerPane.addLogLine("Assigning and adding labels ...");
-								
-								// Get label list
-								labels = textLabels.getText().split(" ");
-								for (String s : labels)
-								{
-									Logger.log(Logger.TAG_CRSMANAGER, "Label entered: " + s);
-								}
-								
-								for (String crKey : CRs)
-								{
-									crKey = trimCR(crKey);
-									jira.assignIssue(crKey);
-									jira.addLabel(crKey, labels);
-								}
-							}
-							
-							// Otherwise ...
-							else
-							{
-								SharedObjs.crsManagerPane.addLogLine("Assigning CRs...");
-								for (String crKey : CRs)
-								{
-									crKey = trimCR(crKey);
-									jira.assignIssue(crKey);
-								}
-							}
-							
-							SharedObjs.crsManagerPane.addLogLine("Done");
-						}
-						
-						// Add Labels
-						else if (chckbxLabels.isSelected())
-						{
-							SharedObjs.crsManagerPane.addLogLine("Adding labels ...");
-							
-							// Get label list
-							labels = textLabels.getText().split(" ");
-							for (String s : labels)
-							{
-								Logger.log(Logger.TAG_CRSMANAGER, "Label entered: " + s);
-							}
-							
-							// Manage CR
-							for (String crKey : CRs)
-							{
-								crKey = trimCR(crKey);
-								if (jira.addLabel(crKey, labels)
-								        .contains("\"labels\":\"Field 'labels' cannot be set. It is not on the appropriate screen, or unknown"))
-								{
-									jira.assignIssue(crKey);
-									jira.addLabel(crKey, labels);
-									jira.unassignIssue(crKey);
-								}
-							}
-							
-							SharedObjs.crsManagerPane.addLogLine("Done");
-						}
-						
-						// Unassign CRs
-						if (chckbxUnassign.isSelected())
-						{
-							// If need to unassign issues too, do it at same time
-							if (chckbxRemLabels.isSelected())
-							{
-								SharedObjs.crsManagerPane.addLogLine("Unassignin and removing labels ...");
-								
-								// Get label list
-								labels = textLabels.getText().split(" ");
-								for (String crKey : CRs)
-								{
-									crKey = trimCR(crKey);
-									jira.removeLabel(crKey, labels);
-									jira.unassignIssue(crKey);
-								}
-							}
-							
-							// Otherwise ...
-							else
-							{
-								SharedObjs.crsManagerPane.addLogLine("Unassigning CRs ...");
-								for (String crKey : CRs)
-								{
-									crKey = trimCR(crKey);
-									jira.unassignIssue(crKey);
-								}
-							}
-							
-							SharedObjs.crsManagerPane.addLogLine("Done");
-						}
-						
-						// Remove labels
-						if (chckbxRemLabels.isSelected())
-						{
-							SharedObjs.crsManagerPane.addLogLine("Removing labels ...");
-							
-							// Get label list
-							labels = textLabels.getText().split(" ");
-							for (String s : labels)
-							{
-								Logger.log(Logger.TAG_CRSMANAGER, "Label entered: " + s);
-							}
-							
-							for (String crKey : CRs)
-							{
-								crKey = trimCR(crKey);
-								if (jira.removeLabel(crKey, labels)
-								        .contains("\"labels\":\"Field 'labels' cannot be set. It is not on the appropriate screen, or unknown"))
-								{
-									jira.assignIssue(crKey);
-									jira.removeLabel(crKey, labels);
-									jira.unassignIssue(crKey);
-								}
-							}
-							
-							SharedObjs.crsManagerPane.addLogLine("Done");
-						}
-					}
-				}
-				catch (ParseException e)
-				{
-					e.printStackTrace();
-				}
-				finally
-				{
-					enableOptionsAndBtns();
-				}
-			}
-		}).start();
-	}
-	
-	public void enableOptionsAndBtns()
-	{
-		btnDownload.setEnabled(true);
-		
-		if (btnDownload.isSelected())
-			chckbxAnalyze.setEnabled(true);
-		
-		if (chckbxAnalyze.isEnabled())
-			chckbxUnzip.setEnabled(true);
-		
-		chckbxAssign.setEnabled(true);
-		chckbxCloseAsOld.setEnabled(true);
-		chckbxDownload.setEnabled(true);
-		chckbxLabels.setEnabled(true);
-		chckbxRemLabels.setEnabled(true);
-		chckbxUnassign.setEnabled(true);
-	}
-	
-	public void disableOptionsAndBtns()
-	{
-		btnDownload.setEnabled(false);
-		chckbxAnalyze.setEnabled(false);
-		chckbxAssign.setEnabled(false);
-		chckbxAssign.setEnabled(false);
-		chckbxCloseAsOld.setEnabled(false);
-		chckbxDownload.setEnabled(false);
-		chckbxLabels.setEnabled(false);
-		chckbxRemLabels.setEnabled(false);
-		chckbxUnassign.setEnabled(false);
-		chckbxUnzip.setEnabled(false);
 	}
 	
 	private void btnOpenAction()
@@ -1406,6 +1031,51 @@ public class CrsManagerPane extends JPanel
 		return textLabels.getText().split(" ");
 	}
 	
+	public void setBtnDownloadEnabled(Boolean value)
+	{
+		btnDownload.setEnabled(value);
+	}
+	
+	public void setChckbxAnalyzeEnabled(Boolean value)
+	{
+		chckbxAnalyze.setEnabled(value);
+	}
+	
+	public void setChckbxAssignEnabled(Boolean value)
+	{
+		chckbxAssign.setEnabled(value);
+	}
+	
+	public void setChckbxCloseAsOldEnabled(Boolean value)
+	{
+		chckbxCloseAsOld.setEnabled(value);
+	}
+	
+	public void setChckbxDownloadEnabled(Boolean value)
+	{
+		chckbxDownload.setEnabled(value);
+	}
+	
+	public void setChckbxLabelsEnabled(Boolean value)
+	{
+		chckbxLabels.setEnabled(value);
+	}
+	
+	public void setChckbxRemLabelsEnabled(Boolean value)
+	{
+		chckbxRemLabels.setEnabled(value);
+	}
+	
+	public void setChckbxUnassignEnabled(Boolean value)
+	{
+		chckbxUnassign.setEnabled(value);
+	}
+	
+	public void setChckbxUnzipEnabled(Boolean value)
+	{
+		chckbxUnzip.setEnabled(value);
+	}
+	
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Getters ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1479,26 +1149,6 @@ public class CrsManagerPane extends JPanel
 		return chckbxIgnoreAnalyzed.isSelected();
 	}
 	
-	public String[] getCRs()
-	{
-		return CRs;
-	}
-	
-	public String[] getLabels()
-	{
-		return labels;
-	}
-	
-	public int getErrors()
-	{
-		return errors;
-	}
-	
-	public CrItemsList getIgnoredList()
-	{
-		return ignoredList;
-	}
-	
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Setters ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1527,68 +1177,48 @@ public class CrsManagerPane extends JPanel
 		textPane.setText(text);
 	}
 	
-	public void setChckbxAssign(Boolean value)
+	public void setChckbxAssignSelected(Boolean value)
 	{
 		chckbxAssign.setSelected(value);
 	}
 	
-	public void setChckbxLabels(Boolean value)
+	public void setChckbxLabelsSelected(Boolean value)
 	{
 		chckbxLabels.setSelected(value);
 	}
 	
-	public void setChckbxUnassign(Boolean value)
+	public void setChckbxUnassignSelected(Boolean value)
 	{
 		chckbxUnassign.setSelected(value);
 	}
 	
-	public void setChckbxRemLabels(Boolean value)
+	public void setChckbxRemLabelsSelected(Boolean value)
 	{
 		chckbxRemLabels.setSelected(value);
 	}
 	
-	public void setChckbxDownload(Boolean value)
+	public void setChckbxDownloadSelected(Boolean value)
 	{
 		chckbxDownload.setSelected(value);
 	}
 	
-	public void setChckbxUnzip(Boolean value)
+	public void setChckbxUnzipSelected(Boolean value)
 	{
 		chckbxUnzip.setSelected(value);
 	}
 	
-	public void setChckbxAnalyze(Boolean value)
+	public void setChckbxAnalyzeSelected(Boolean value)
 	{
 		chckbxAnalyze.setSelected(value);
 	}
 	
-	public void setChckbxCloseAsOld(Boolean value)
+	public void setChckbxCloseAsOldSelected(Boolean value)
 	{
 		chckbxCloseAsOld.setSelected(value);
 	}
 	
-	public void setChckbxIgnoreAnalyzed(Boolean value)
+	public void setChckbxIgnoreAnalyzedSelected(Boolean value)
 	{
 		chckbxIgnoreAnalyzed.setSelected(value);
-	}
-	
-	public void setCRs(String[] cRs)
-	{
-		CRs = cRs;
-	}
-	
-	public void setLabels(String[] labels)
-	{
-		this.labels = labels;
-	}
-	
-	public void setErrors(int errors)
-	{
-		this.errors = errors;
-	}
-	
-	public void setIgnoredList(CrItemsList ignoredList)
-	{
-		this.ignoredList = ignoredList;
 	}
 }

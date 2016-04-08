@@ -15,12 +15,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import main.SAT2;
+import models.CrsManagerModel;
 
 import org.apache.commons.io.FileUtils;
 
-import controllers.CrsManagerController;
-import controllers.OptionsController;
-import controllers.ParserController;
 import supportive.DBAdapter;
 import views.CrsManagerPane;
 import views.OptionsPane;
@@ -28,6 +26,9 @@ import views.ParserPane;
 import views.secondarypanes.AdvancedOptionsPane;
 import views.secondarypanes.CustomFiltersPane;
 import views.secondarypanes.ParallelTextPopup;
+import controllers.CrsManagerController;
+import controllers.OptionsController;
+import controllers.ParserController;
 import customobjects.CrItem;
 import customobjects.CrItemsList;
 import customobjects.CustomFilterItem;
@@ -81,6 +82,9 @@ public class SharedObjs
 	public static ParserController     parserController;
 	public static CrsManagerController crsManagerController;
 	public static OptionsController    optionsController;
+	
+	// Models
+	public static CrsManagerModel crsManagerModel;
 	
 	/*
 	 * Fixed parameters:
@@ -153,6 +157,7 @@ public class SharedObjs
 		parserController.startController(parserPane);
 		
 		crsManagerPane = new CrsManagerPane();
+		crsManagerModel = new CrsManagerModel();
 		
 		optionsPane = new OptionsPane();
 		optionsController = new OptionsController();

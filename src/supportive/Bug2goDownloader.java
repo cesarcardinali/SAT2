@@ -392,13 +392,13 @@ public class Bug2goDownloader implements Runnable
 			JOptionPane.showMessageDialog(SharedObjs.satFrame, "There were errors during the download. \nFiles may be missing or corrupted.");
 		
 		// Ask if user wants to unzip them all
-		if (SharedObjs.crsManagerPane.getChckbxUnzip().isSelected())
+		if (SharedObjs.crsManagerPane.isChckbxUnzipSelected())
 		{
 			File[] filesName = new File(SharedObjs.getDownloadPath()).listFiles();
 			
 			for (File file : filesName)
 			{
-				if (SharedObjs.crsManagerPane.getChckbxUnzip().isSelected() && file.isFile() && file.getName().contains(".zip")
+				if (SharedObjs.crsManagerPane.isChckbxUnzipSelected() && file.isFile() && file.getName().contains(".zip")
 				    && file.getName().contains("_B2G_") && b2gdoneListContains(file.getName().substring(0, file.getName().indexOf("_"))))
 				{
 					String b2gID = file.getName().substring(0, file.getName().indexOf("_")); //Pegar b2gID pelo nome do arquivo;
@@ -413,9 +413,9 @@ public class Bug2goDownloader implements Runnable
 					SharedObjs.crsManagerPane.addLogLine("Done");
 					
 					// Analyze
-					if (SharedObjs.crsManagerPane.getChckbxAnalyze().isSelected())
+					if (SharedObjs.crsManagerPane.isChckbxAnalyzeSelected())
 					{
-						CrItem cr = SharedObjs.crsManagerPane.getIgnoredList().getCrByB2gId(b2gID);
+						CrItem cr = SharedObjs.crsManagerModel.getIgnoredList().getCrByB2gId(b2gID);
 						
 						// Check if should be ignored
 						if(cr != null)
@@ -457,7 +457,7 @@ public class Bug2goDownloader implements Runnable
 				}
 			}
 			
-			if (SharedObjs.crsManagerPane.getChckbxAnalyze().isSelected())
+			if (SharedObjs.crsManagerPane.isChckbxAnalyzeSelected())
 			{
 				SharedObjs.clearCRsListPanes();
 				SharedObjs.getClosedList().clear();
@@ -488,7 +488,7 @@ public class Bug2goDownloader implements Runnable
 			SharedObjs.crsManagerPane.addLogLine("All done!");
 		}
 		
-		SharedObjs.crsManagerPane.enableOptionsAndBtns();
+		SharedObjs.crsManagerController.enableViewOptionsAndBtns();
 	}
 	
 	/**
