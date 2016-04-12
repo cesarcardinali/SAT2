@@ -61,7 +61,7 @@ public class CrChecker
 		File file = new File(crPath);
 		cr = SharedObjs.getCrsList().getCrByB2gId(file.getName());
 		
-		SharedObjs.crsManagerPane.addLogLine("Analysing " + cr.getJiraID());
+		SharedObjs.addLogLine("Analysing " + cr.getJiraID());
 		Logger.log("CR CHECKER", "Analysing " + cr.getJiraID());
 		
 		if (cr != null)
@@ -69,24 +69,24 @@ public class CrChecker
 			long start = System.currentTimeMillis();
 			
 			System.out.println("\n\n");
-			SharedObjs.crsManagerPane.addLogLine("Adding pre analyzed label ...");
+			SharedObjs.addLogLine("Adding pre analyzed label ...");
 			jira = new JiraSatApi(JiraSatApi.DEFAULT_JIRA_URL, SharedObjs.getUser(), SharedObjs.getPass());
-			SharedObjs.crsManagerPane.addLogLine("CR Assignee: " + cr.getAssignee());
+			SharedObjs.addLogLine("CR Assignee: " + cr.getAssignee());
 			if (cr.getAssignee().equals(""))
 			{
 				jira.assignIssue(cr.getJiraID());
 				jira.addLabel(cr.getJiraID(), "sat_pre_analyzed");
 				jira.unassignIssue(cr.getJiraID());
-				SharedObjs.crsManagerPane.addLogLine("Unassigning");
+				SharedObjs.addLogLine("Unassigning");
 			}
 			else
 			{
-				SharedObjs.crsManagerPane.addLogLine("Letting assigned");
+				SharedObjs.addLogLine("Letting assigned");
 				jira.addLabel(cr.getJiraID(), "sat_pre_analyzed");
 			}
 			
 			System.out.println("\n\n");
-			SharedObjs.crsManagerPane.addLogLine("Checking if incomplete ...");
+			SharedObjs.addLogLine("Checking if incomplete ...");
 			if (checkIfIncomplete())
 			{
 				jira.assignIssue(cr.getJiraID());
@@ -105,7 +105,7 @@ public class CrChecker
 						SharedObjs.satDB.insertAnalyzedCR(cr);
 					}
 				
-				SharedObjs.crsManagerPane.addLogLine("Logs are missing. Closing CR " + cr.getJiraID() + " as incomplete");
+				SharedObjs.addLogLine("Logs are missing. Closing CR " + cr.getJiraID() + " as incomplete");
 				
 				Logger.log(Logger.TAG_BUG2GODOWNLOADER, "Done for " + file.getAbsolutePath() + ". Closed as incomplete");
 				
@@ -116,46 +116,46 @@ public class CrChecker
 			// Parse BTD
 			btdParser = new BtdParser(crPath);
 			System.out.println("\n\n");
-			SharedObjs.crsManagerPane.addLogLine("Parsing BTD data ...");
+			SharedObjs.addLogLine("Parsing BTD data ...");
 			btdParsed = btdParser.parse();
 			if (btdParsed)
 			{
-				SharedObjs.crsManagerPane.addLogLine("Done");
+				SharedObjs.addLogLine("Done");
 			}
 			else
 			{
-				SharedObjs.crsManagerPane.addLogLine("Not possible to parse BTD");
+				SharedObjs.addLogLine("Not possible to parse BTD");
 			}
 			
 			// Parse Main
 			mainParser = new MainParser(crPath);
-			SharedObjs.crsManagerPane.addLogLine("Parsing Main log data ...");
+			SharedObjs.addLogLine("Parsing Main log data ...");
 			mainParsed = mainParser.parse();
 			if (mainParsed)
 			{
-				SharedObjs.crsManagerPane.addLogLine("Done");
+				SharedObjs.addLogLine("Done");
 			}
 			else
 			{
-				SharedObjs.crsManagerPane.addLogLine("Not possible to parse Main");
+				SharedObjs.addLogLine("Not possible to parse Main");
 			}
 			
 			// Parse Bugreport
 			bugrepParser = new BugrepParser(crPath);
-			SharedObjs.crsManagerPane.addLogLine("Parsing Bugreport log data ...");
+			SharedObjs.addLogLine("Parsing Bugreport log data ...");
 			bugrepParsed = bugrepParser.parse();
 			if (bugrepParsed)
 			{
-				SharedObjs.crsManagerPane.addLogLine("Done");
+				SharedObjs.addLogLine("Done");
 				dupComment = "";
 			}
 			else
 			{
-				SharedObjs.crsManagerPane.addLogLine("Not possible to parse Bugreport");
+				SharedObjs.addLogLine("Not possible to parse Bugreport");
 			}
 			
 			System.out.println("\n\n");
-			SharedObjs.crsManagerPane.addLogLine("Checking for wakelocks ...");
+			SharedObjs.addLogLine("Checking for wakelocks ...");
 			Logger.log(Logger.TAG_BUG2GODOWNLOADER, "Checking for wakelocks");
 			
 			if (checkIfWakelocks())
@@ -188,7 +188,7 @@ public class CrChecker
 						SharedObjs.satDB.insertAnalyzedCR(cr);
 					}
 				
-				SharedObjs.crsManagerPane.addLogLine("Could not duplicate this CR. Needs manual analysis.");
+				SharedObjs.addLogLine("Could not duplicate this CR. Needs manual analysis.");
 				
 				Logger.log(Logger.TAG_BUG2GODOWNLOADER, "Done for " + file.getAbsolutePath() + ". PMS stuck was detected. Needs manual analysis.");
 				
@@ -196,7 +196,7 @@ public class CrChecker
 			}
 			
 			System.out.println("\n\n");
-			SharedObjs.crsManagerPane.addLogLine("Checking for tethering ...");
+			SharedObjs.addLogLine("Checking for tethering ...");
 			Logger.log(Logger.TAG_BUG2GODOWNLOADER, "Checking for tethering");
 			if (checkIfTethering())
 			{
@@ -216,7 +216,7 @@ public class CrChecker
 						SharedObjs.satDB.insertAnalyzedCR(cr);
 					}
 				
-				SharedObjs.crsManagerPane.addLogLine("Tethering detected. Closing CR " + cr.getJiraID() + " as invalid");
+				SharedObjs.addLogLine("Tethering detected. Closing CR " + cr.getJiraID() + " as invalid");
 				
 				Logger.log(Logger.TAG_BUG2GODOWNLOADER, "Done for " + file.getAbsolutePath() + ". Closed as invalid");
 				
@@ -224,7 +224,7 @@ public class CrChecker
 			}
 			
 			System.out.println("\n\n");
-			SharedObjs.crsManagerPane.addLogLine("Checking for uptime ...");
+			SharedObjs.addLogLine("Checking for uptime ...");
 			Logger.log(Logger.TAG_BUG2GODOWNLOADER, "Checking for uptime");
 			
 			if (checkIfUptime())
@@ -244,7 +244,7 @@ public class CrChecker
 						SharedObjs.satDB.insertAnalyzedCR(cr);
 					}
 				
-				SharedObjs.crsManagerPane.addLogLine("Uptimes detected. Needs manual analysis.");
+				SharedObjs.addLogLine("Uptimes detected. Needs manual analysis.");
 				
 				Logger.log(Logger.TAG_BUG2GODOWNLOADER, "Done for " + file.getAbsolutePath() + ". Uptimes detected. Needs manual analysis.");
 				
@@ -252,7 +252,7 @@ public class CrChecker
 			}
 			
 			System.out.println("\n\n");
-			SharedObjs.crsManagerPane.addLogLine("Checking for high consumption issues ...");
+			SharedObjs.addLogLine("Checking for high consumption issues ...");
 			Logger.log(Logger.TAG_BUG2GODOWNLOADER, "Checking for high consumption issues");
 			
 			if (checkIfHighCons())
@@ -270,7 +270,7 @@ public class CrChecker
 			}
 			
 			System.out.println("\n\n");
-			SharedObjs.crsManagerPane.addLogLine("Checking if false positive ...");
+			SharedObjs.addLogLine("Checking if false positive ...");
 			Logger.log(Logger.TAG_BUG2GODOWNLOADER, "Checking for false positive");
 			
 			if (checkIfFalsePositive())
@@ -279,7 +279,7 @@ public class CrChecker
 			}
 			
 			Logger.log(Logger.TAG_BUG2GODOWNLOADER, "Nothing detected");
-			SharedObjs.crsManagerPane.addLogLine("Nothing detected. " + DateTimeOperator.getTimeStringFromMillis((System.currentTimeMillis() - start)));
+			SharedObjs.addLogLine("Nothing detected. " + DateTimeOperator.getTimeStringFromMillis((System.currentTimeMillis() - start)));
 			
 			String comment = "";
 			String eblDecresed = "{panel:title=*Items that increases current drain and decreases EBL*|titleBGColor=#E9F2FF}\\n";
@@ -319,7 +319,7 @@ public class CrChecker
 			
 			btdParser.close();
 			
-			SharedObjs.crsManagerPane.addLogLine("CR " + cr.getJiraID() + " not closed");
+			SharedObjs.addLogLine("CR " + cr.getJiraID() + " not closed");
 			
 			Logger.log(Logger.TAG_BUG2GODOWNLOADER, "Done for " + file.getAbsolutePath() + "  -  CR " + cr.getJiraID());
 			
@@ -573,7 +573,7 @@ public class CrChecker
 		boolean dupped = false;
 		String dupCRs = "";
 		
-		SharedObjs.crsManagerPane.addLogLine("Consumption issue detected. Searching for a root CR for this issue...");
+		SharedObjs.addLogLine("Consumption issue detected. Searching for a root CR for this issue...");
 		
 		for (int i = 0; i < Consume.getHCList().size(); i++)
 		{
@@ -602,7 +602,7 @@ public class CrChecker
 				{
 					try
 					{
-						SharedObjs.crsManagerPane.addLogLine("Root CR " + jqr.getItems().get(0).getKey() + " detected. Checking if CR is valid ...");
+						SharedObjs.addLogLine("Root CR " + jqr.getItems().get(0).getKey() + " detected. Checking if CR is valid ...");
 						CrItem root = jira.getCrData(jqr.getItems().get(0).getKey());
 						
 						if (root.getResolution().equals("Duplicate"))
@@ -670,7 +670,7 @@ public class CrChecker
 				{
 					try
 					{
-						SharedObjs.crsManagerPane.addLogLine("Root CR " + jqr.getItems().get(0).getKey() + " detected. Checking if CR is valid ...");
+						SharedObjs.addLogLine("Root CR " + jqr.getItems().get(0).getKey() + " detected. Checking if CR is valid ...");
 						CrItem root = jira.getCrData(jqr.getItems().get(0).getKey());
 						
 						if (root.getResolution().equals("Duplicate"))
@@ -719,13 +719,13 @@ public class CrChecker
 		
 		if (dupCRs.length() > 5)
 		{
-			SharedObjs.crsManagerPane.addLogLine("Consumption issue root detected, duplicating CR ...");
+			SharedObjs.addLogLine("Consumption issue root detected, duplicating CR ...");
 			jira.assignIssue(cr.getJiraID());
 			jira.addLabel(cr.getJiraID(), "cd_auto");
 			jira.addLabel(cr.getJiraID(), "sat_dupped");
 			jira.addLabel(cr.getJiraID(), "sat_closed");
 			jira.dupIssue(cr.getJiraID(), dupCRs, dupComment.replace("\n", "\\n"));
-			SharedObjs.crsManagerPane.addLogLine("CR duplicated to " + dupCRs);
+			SharedObjs.addLogLine("CR duplicated to " + dupCRs);
 			
 			return true;
 		}
@@ -830,7 +830,7 @@ public class CrChecker
 						SharedObjs.satDB.insertAnalyzedCR(cr);
 					}
 				
-				SharedObjs.crsManagerPane.addLogLine("This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
+				SharedObjs.addLogLine("This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
 				
 				Logger.log(Logger.TAG_BUG2GODOWNLOADER, "This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
 				
@@ -872,7 +872,7 @@ public class CrChecker
 						SharedObjs.satDB.insertAnalyzedCR(cr);
 					}
 				
-				SharedObjs.crsManagerPane.addLogLine("This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
+				SharedObjs.addLogLine("This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
 				
 				Logger.log(Logger.TAG_BUG2GODOWNLOADER, "This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
 				
@@ -904,7 +904,7 @@ public class CrChecker
 						SharedObjs.satDB.insertAnalyzedCR(cr);
 					}
 				
-				SharedObjs.crsManagerPane.addLogLine("This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
+				SharedObjs.addLogLine("This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
 				
 				Logger.log(Logger.TAG_BUG2GODOWNLOADER, "This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
 				
@@ -946,7 +946,7 @@ public class CrChecker
 				System.out.println("-- Comments:");
 				System.out.println(comment.replaceAll("\\n", "\n"));
 				
-				SharedObjs.crsManagerPane.addLogLine("This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
+				SharedObjs.addLogLine("This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
 				
 				Logger.log(Logger.TAG_BUG2GODOWNLOADER, "This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
 				
@@ -1018,7 +1018,7 @@ public class CrChecker
 						SharedObjs.satDB.insertAnalyzedCR(cr);
 					}
 				
-				SharedObjs.crsManagerPane.addLogLine("This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
+				SharedObjs.addLogLine("This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
 				
 				Logger.log(Logger.TAG_BUG2GODOWNLOADER, "1 This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
 				
@@ -1058,7 +1058,7 @@ public class CrChecker
 						SharedObjs.satDB.insertAnalyzedCR(cr);
 					}
 				
-				SharedObjs.crsManagerPane.addLogLine("This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
+				SharedObjs.addLogLine("This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
 				
 				Logger.log(Logger.TAG_BUG2GODOWNLOADER, "2 This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
 				
@@ -1097,7 +1097,7 @@ public class CrChecker
 						SharedObjs.satDB.insertAnalyzedCR(cr);
 					}
 				
-				SharedObjs.crsManagerPane.addLogLine("This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
+				SharedObjs.addLogLine("This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
 				
 				Logger.log(Logger.TAG_BUG2GODOWNLOADER, "3 This CR is a false positive. Closing " + cr.getJiraID() + " as cancelled");
 				
@@ -1203,7 +1203,7 @@ public class CrChecker
 				// Wakelock dup
 				if (wakelocksComment.length() > 50)
 				{
-					SharedObjs.crsManagerPane.addLogLine("Wakelock detected. Searching for similar issue ...");
+					SharedObjs.addLogLine("Wakelock detected. Searching for similar issue ...");
 					String dupCRs = "";
 					
 					// Check for Java wake locks
@@ -1284,7 +1284,7 @@ public class CrChecker
 								
 								if (jqr.getResultCount() == 1)
 								{
-									SharedObjs.crsManagerPane.addLogLine("Root CR " + jqr.getItems().get(0).getKey() + " detected. Checking if CR is valid ...");
+									SharedObjs.addLogLine("Root CR " + jqr.getItems().get(0).getKey() + " detected. Checking if CR is valid ...");
 									CrItem root;
 									
 									try
@@ -1393,7 +1393,7 @@ public class CrChecker
 								
 								if (jqr.getResultCount() == 1)
 								{
-									SharedObjs.crsManagerPane.addLogLine("Root CR " + jqr.getItems().get(0).getKey() + " detected. Checking if CR is valid ...");
+									SharedObjs.addLogLine("Root CR " + jqr.getItems().get(0).getKey() + " detected. Checking if CR is valid ...");
 									CrItem root;
 									
 									try
@@ -1450,13 +1450,13 @@ public class CrChecker
 					
 					if (dupCRs.length() > 5)
 					{
-						SharedObjs.crsManagerPane.addLogLine("Wakelock root detected, duplicating CR ...");
+						SharedObjs.addLogLine("Wakelock root detected, duplicating CR ...");
 						jira.assignIssue(cr.getJiraID());
 						jira.addLabel(cr.getJiraID(), "cd_auto");
 						jira.addLabel(cr.getJiraID(), "sat_dupped");
 						jira.addLabel(cr.getJiraID(), "sat_closed");
 						jira.dupIssue(cr.getJiraID(), dupCRs, dupComment);
-						SharedObjs.crsManagerPane.addLogLine("CR duplicated to " + dupCRs);
+						SharedObjs.addLogLine("CR duplicated to " + dupCRs);
 						
 						return true;
 					}

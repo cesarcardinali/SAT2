@@ -1,8 +1,6 @@
 package models;
 
 
-import javax.swing.JButton;
-
 import customobjects.CrItem;
 import customobjects.CrItemsList;
 
@@ -15,7 +13,6 @@ public class CrsManagerModel
 	private String      CRs[];
 	private String      labels[];
 	private int         errors;
-	private JButton     btnDownload;
 	private CrItemsList ignoredList;
 	
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -29,7 +26,7 @@ public class CrsManagerModel
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Model data IO ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	public int getNumOfCRs() // getCRsCount()
+	public int getCRsCount() // getCRsCount()
 	{
 		return CRs.length;
 	}
@@ -76,12 +73,7 @@ public class CrsManagerModel
 	{
 		return errors;
 	}
-	
-	public JButton getBtnDownload()
-	{
-		return btnDownload;
-	}
-	
+
 	public CrItemsList getIgnoredList()
 	{
 		return ignoredList;
@@ -103,11 +95,6 @@ public class CrsManagerModel
 	public void setErrors(int errors)
 	{
 		this.errors = errors;
-	}
-	
-	public void setBtnDownload(JButton btnDownload)
-	{
-		this.btnDownload = btnDownload;
 	}
 	
 	public void setIgnoredList(CrItemsList ignoredList)

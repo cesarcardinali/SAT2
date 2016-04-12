@@ -175,7 +175,7 @@ public class Bug2goItem implements Runnable
 				Logger.log(Logger.TAG_BUG2GOITEM, "BUGID " + bugId + ": Download finished. Thread will die.");
 				
 				reader.close();
-				SharedObjs.crsManagerPane.addLogLine(fileName + " download finished");
+				SharedObjs.addLogLine(fileName + " download finished");
 				file.close();
 				
 				status = DownloadStatus.DONE;

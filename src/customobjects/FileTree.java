@@ -489,7 +489,7 @@ public class FileTree extends JPanel
 								
 								try
 								{
-									SharedObjs.crsManagerPane.runScript(file.getAbsolutePath());
+									SharedObjs.runScript(file.getAbsolutePath());
 									dialog.updateDialogView(++count);
 								}
 								catch (IOException e)
@@ -524,17 +524,17 @@ public class FileTree extends JPanel
 								DefaultMutableTreeNode node = (DefaultMutableTreeNode) p.getLastPathComponent();
 								File file = (File) node.getUserObject();
 								
-								SharedObjs.crsManagerPane.addLogLine("Pre analyzing CR ...");
+								SharedObjs.addLogLine("Pre analyzing CR ...");
 								
 								CrChecker crChecker = new CrChecker(file.getAbsolutePath());
 								boolean crClosed = crChecker.checkCR();
 								
 								if (crClosed == false)
 								{
-									SharedObjs.crsManagerPane.addLogLine("Nothing detected");
+									SharedObjs.addLogLine("Nothing detected");
 									try
 									{
-										SharedObjs.crsManagerPane.runScript(file.getAbsolutePath());
+										SharedObjs.runScript(file.getAbsolutePath());
 									}
 									catch (IOException e)
 									{
@@ -544,7 +544,7 @@ public class FileTree extends JPanel
 								
 								dialog.updateDialogView(++count);
 								
-								SharedObjs.crsManagerPane.addLogLine("All done for " + file.getName() + "\n");
+								SharedObjs.addLogLine("All done for " + file.getName() + "\n");
 							}
 						}
 					});
@@ -795,20 +795,20 @@ public class FileTree extends JPanel
 						
 						if (preanalyze)
 						{
-							SharedObjs.crsManagerPane.addLogLine("Pre analyzing CR ...");
+							SharedObjs.addLogLine("Pre analyzing CR ...");
 							
 							CrChecker crChecker = new CrChecker(newFile.getAbsolutePath());
 							crClosed = crChecker.checkCR();
 							
 							if (crClosed == false)
 							{
-								SharedObjs.crsManagerPane.addLogLine("Nothing detected");
+								SharedObjs.addLogLine("Nothing detected");
 								
 								if (run)
 								{
 									try
 									{
-										SharedObjs.crsManagerPane.runScript(newFile.getAbsolutePath());
+										SharedObjs.runScript(newFile.getAbsolutePath());
 									}
 									catch (IOException e)
 									{
@@ -823,7 +823,7 @@ public class FileTree extends JPanel
 							{
 								try
 								{
-									SharedObjs.crsManagerPane.runScript(newFile.getAbsolutePath());
+									SharedObjs.runScript(newFile.getAbsolutePath());
 								}
 								catch (IOException e)
 								{
@@ -834,7 +834,7 @@ public class FileTree extends JPanel
 						
 						node.add(new DefaultMutableTreeNode(newFile));
 						
-						SharedObjs.crsManagerPane.addLogLine("All done for " + newFile.getName() + "\n");
+						SharedObjs.addLogLine("All done for " + newFile.getName() + "\n");
 					}
 					
 					fileTree.updateUI();

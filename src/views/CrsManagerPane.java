@@ -2,7 +2,6 @@ package views;
 
 
 import java.awt.Color;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -10,32 +9,11 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.SystemColor;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.URI;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -44,14 +22,8 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
-import core.Logger;
-import core.SharedObjs;
-import core.XmlMngr;
 
 
 @SuppressWarnings("serial")
@@ -60,9 +32,9 @@ public class CrsManagerPane extends JPanel
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Variables -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	private JTextArea  textDownload;
 	private JTextField textPath;
 	private JTextField textLabels;
+	private JTextArea  textDownload;
 	private JTextPane  textLog;
 	private JTextPane  textPane;
 	private JCheckBox  chckbxAssign;
@@ -74,11 +46,11 @@ public class CrsManagerPane extends JPanel
 	private JCheckBox  chckbxAnalyze;
 	private JCheckBox  chckbxCloseAsOld;
 	private JCheckBox  chckbxIgnoreAnalyzed;
-	private JCheckBox  btnPaste;
+	private JButton    btnPaste;
 	private JButton    btnOpenOnBrowser;
-	private JButton    btnLists;
+	private JButton    btnShowResultLists;
 	private JButton    btnClear;
-	private JButton    btnDownload;
+	private JButton    btnExecute;
 	
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Constructor -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -147,7 +119,7 @@ public class CrsManagerPane extends JPanel
 		textDownload.setBorder(null);
 		
 		btnClear = new JButton("Clear");
-		btnClear.setToolTipText("Clear the text area above");
+		btnClear.setToolTipText("Clear text area above");
 		btnClear.setPreferredSize(new Dimension(113, 23));
 		btnClear.setMaximumSize(new Dimension(113, 23));
 		btnClear.setMinimumSize(new Dimension(113, 23));
@@ -157,7 +129,9 @@ public class CrsManagerPane extends JPanel
 		gbc_btnClear.gridy = 3;
 		panel_3.add(btnClear, gbc_btnClear);
 		
-		btnPaste = new JCheckBox("New check box");
+		btnPaste = new JButton("Paste");
+		btnPaste.setToolTipText("Paste clipboard");
+		btnPaste.setPreferredSize(new Dimension(113, 23));
 		GridBagConstraints gbc_btnPaste = new GridBagConstraints();
 		gbc_btnPaste.gridx = 0;
 		gbc_btnPaste.gridy = 4;
@@ -193,6 +167,7 @@ public class CrsManagerPane extends JPanel
 		panel_1.add(label, gbc_label);
 		
 		chckbxAssign = new JCheckBox("Assign CRs");
+		chckbxAssign.setToolTipText("Mark this option to assign the CR for you");
 		chckbxAssign.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_chckbxAssign = new GridBagConstraints();
 		gbc_chckbxAssign.anchor = GridBagConstraints.WEST;
@@ -205,6 +180,7 @@ public class CrsManagerPane extends JPanel
 		chckbxAssign.setMinimumSize(new Dimension(15, 20));
 		
 		chckbxUnassign = new JCheckBox("Unassign CRs");
+		chckbxUnassign.setToolTipText("Mark it to let CRs unassigned");
 		GridBagConstraints gbc_chckbxUnassign = new GridBagConstraints();
 		gbc_chckbxUnassign.fill = GridBagConstraints.BOTH;
 		gbc_chckbxUnassign.insets = new Insets(0, 0, 5, 5);
@@ -222,6 +198,7 @@ public class CrsManagerPane extends JPanel
 		panel_1.add(separator, gbc_separator);
 		
 		chckbxLabels = new JCheckBox("Add labels");
+		chckbxLabels.setToolTipText("Mark it to add the specified labels to CRs");
 		GridBagConstraints gbc_chckbxLabels = new GridBagConstraints();
 		gbc_chckbxLabels.fill = GridBagConstraints.BOTH;
 		gbc_chckbxLabels.insets = new Insets(0, 0, 5, 5);
@@ -245,6 +222,7 @@ public class CrsManagerPane extends JPanel
 		textLabels.setBorder(new LineBorder(SystemColor.activeCaption));
 		
 		chckbxRemLabels = new JCheckBox("Remove labels");
+		chckbxRemLabels.setToolTipText("Mark it to remove the specified labels to CRs");
 		GridBagConstraints gbc_chckbxRemLabels = new GridBagConstraints();
 		gbc_chckbxRemLabels.fill = GridBagConstraints.BOTH;
 		gbc_chckbxRemLabels.insets = new Insets(0, 0, 5, 5);
@@ -262,6 +240,7 @@ public class CrsManagerPane extends JPanel
 		panel_1.add(separator_1, gbc_separator_1);
 		
 		chckbxDownload = new JCheckBox("Download");
+		chckbxDownload.setToolTipText("Mark it to download CRs");
 		chckbxDownload.setSelected(true);
 		GridBagConstraints gbc_chckbxDownload = new GridBagConstraints();
 		gbc_chckbxDownload.fill = GridBagConstraints.BOTH;
@@ -284,6 +263,7 @@ public class CrsManagerPane extends JPanel
 		textPath.setPreferredSize(new Dimension(150, 20));
 		
 		chckbxUnzip = new JCheckBox("Unzip downloaded CRs");
+		chckbxUnzip.setToolTipText("Mark it to unzip downloaded CRs");
 		chckbxUnzip.setSelected(true);
 		GridBagConstraints gbc_chckbxUnzip = new GridBagConstraints();
 		gbc_chckbxUnzip.fill = GridBagConstraints.BOTH;
@@ -293,6 +273,7 @@ public class CrsManagerPane extends JPanel
 		panel_1.add(chckbxUnzip, gbc_chckbxUnzip);
 		
 		chckbxAnalyze = new JCheckBox("Analyze downloaded CRs");
+		chckbxAnalyze.setToolTipText("Mark it to SAT analyze downloaded CRs");
 		chckbxAnalyze.setSelected(true);
 		GridBagConstraints gbc_chckbxAnalyze = new GridBagConstraints();
 		gbc_chckbxAnalyze.fill = GridBagConstraints.BOTH;
@@ -301,7 +282,8 @@ public class CrsManagerPane extends JPanel
 		gbc_chckbxAnalyze.gridy = 9;
 		panel_1.add(chckbxAnalyze, gbc_chckbxAnalyze);
 		
-		chckbxCloseAsOld = new JCheckBox("Close CRs as Old");
+		chckbxCloseAsOld = new JCheckBox("Close CRs as old issues");
+		chckbxCloseAsOld.setToolTipText("Mark it close the CRs as Old");
 		GridBagConstraints gbc_chckbxCloseAsOld = new GridBagConstraints();
 		gbc_chckbxCloseAsOld.fill = GridBagConstraints.BOTH;
 		gbc_chckbxCloseAsOld.insets = new Insets(0, 0, 5, 5);
@@ -319,6 +301,7 @@ public class CrsManagerPane extends JPanel
 		panel_1.add(separator_2, gbc_separator_2);
 		
 		chckbxIgnoreAnalyzed = new JCheckBox("Ignore Analyzed CRs");
+		chckbxIgnoreAnalyzed.setToolTipText("Mark it to ignore already analyzed CRs");
 		chckbxIgnoreAnalyzed.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_chckbxIgnoreAnalyzed = new GridBagConstraints();
 		gbc_chckbxIgnoreAnalyzed.anchor = GridBagConstraints.WEST;
@@ -327,27 +310,27 @@ public class CrsManagerPane extends JPanel
 		gbc_chckbxIgnoreAnalyzed.gridy = 12;
 		panel_1.add(chckbxIgnoreAnalyzed, gbc_chckbxIgnoreAnalyzed);
 		
-		btnDownload = new JButton("Exec!");
+		btnExecute = new JButton("Exec!");
 		GridBagConstraints gbc_btnDownload = new GridBagConstraints();
 		gbc_btnDownload.insets = new Insets(25, 0, 5, 0);
 		gbc_btnDownload.gridwidth = 2;
 		gbc_btnDownload.gridx = 0;
 		gbc_btnDownload.gridy = 13;
-		panel_1.add(btnDownload, gbc_btnDownload);
-		btnDownload.setToolTipText("Start to download the CRs on the list above");
-		btnDownload.setPreferredSize(new Dimension(113, 23));
-		btnDownload.setMaximumSize(new Dimension(113, 23));
-		btnDownload.setMinimumSize(new Dimension(113, 23));
+		panel_1.add(btnExecute, gbc_btnDownload);
+		btnExecute.setToolTipText("Start downloading listed CRs");
+		btnExecute.setPreferredSize(new Dimension(113, 23));
+		btnExecute.setMaximumSize(new Dimension(113, 23));
+		btnExecute.setMinimumSize(new Dimension(113, 23));
 		
-		btnLists = new JButton("Show Result");
-		btnLists.setPreferredSize(new Dimension(113, 23));
-		btnLists.setToolTipText("Open the CRs on the list above on Chrome");
+		btnShowResultLists = new JButton("Show Results");
+		btnShowResultLists.setPreferredSize(new Dimension(113, 23));
+		btnShowResultLists.setToolTipText("Show analysis result");
 		GridBagConstraints gbc_btnLists = new GridBagConstraints();
 		gbc_btnLists.insets = new Insets(0, 0, 5, 0);
 		gbc_btnLists.gridwidth = 2;
 		gbc_btnLists.gridx = 0;
 		gbc_btnLists.gridy = 14;
-		panel_1.add(btnLists, gbc_btnLists);
+		panel_1.add(btnShowResultLists, gbc_btnLists);
 		
 		btnOpenOnBrowser = new JButton("Open on Browser");
 		GridBagConstraints gbc_btnOpenOnBrowser = new GridBagConstraints();
@@ -355,7 +338,7 @@ public class CrsManagerPane extends JPanel
 		gbc_btnOpenOnBrowser.gridx = 0;
 		gbc_btnOpenOnBrowser.gridy = 15;
 		panel_1.add(btnOpenOnBrowser, gbc_btnOpenOnBrowser);
-		btnOpenOnBrowser.setToolTipText("Open the CRs on the list above on Chrome");
+		btnOpenOnBrowser.setToolTipText("Open listed CRs using your default browser");
 		
 		JPanel panel_5 = new JPanel();
 		panel_5.setBorder(new LineBorder(new Color(153, 204, 255), 1, true));
@@ -422,17 +405,14 @@ public class CrsManagerPane extends JPanel
 		textPane.setBorder(null);
 		textPane.setPreferredSize(new Dimension(100, 82));
 		textPane.setMinimumSize(new Dimension(50, 42));
-		
-		loadUserData();
-		// errors = 0;
 	}
 	
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Add Listeners ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	public void btnListsAddActionListener(ActionListener al)
+	public void btnShowResultListsAddActionListener(ActionListener al)
 	{
-		btnLists.addActionListener(al);
+		btnShowResultLists.addActionListener(al);
 	}
 	
 	public void btnPasteAddActionListener(ActionListener al)
@@ -445,9 +425,9 @@ public class CrsManagerPane extends JPanel
 		btnClear.addActionListener(al);
 	}
 	
-	public void btnDownloadAddActionListener(ActionListener al)
+	public void btnExecuteAddActionListener(ActionListener al)
 	{
-		btnDownload.addActionListener(al);
+		btnExecute.addActionListener(al);
 	}
 	
 	public void btnOpenOnBrowserAddActionListener(ActionListener al)
@@ -495,524 +475,6 @@ public class CrsManagerPane extends JPanel
 		chckbxCloseAsOld.addChangeListener(cl);
 	}
 	
-	public void setupActions()
-	{
-		btnLists.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				if (SharedObjs.getClosedList() == null || SharedObjs.getOpenedList() == null)
-				{
-					JOptionPane.showMessageDialog(SharedObjs.crsManagerPane, "Error: The lists does not exist");
-				}
-				
-				SharedObjs.getClosedList().setVisible(true);
-				SharedObjs.getOpenedList().setVisible(true);
-			}
-		});
-		btnPaste.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				btnPasteAction();
-			}
-		});
-		btnClear.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent arg0)
-			{
-				btnClearAction();
-			}
-		});
-		btnDownload.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				// btnDownloadAction();
-			}
-		});
-		btnOpenOnBrowser.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				btnOpenAction();
-			}
-		});
-		
-		textPath.getDocument().addDocumentListener(new DocumentListener()
-		{
-			@Override
-			public void removeUpdate(DocumentEvent arg0)
-			{
-				SharedObjs.setDownloadPath(textPath.getText());
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent arg0)
-			{
-				SharedObjs.setDownloadPath(textPath.getText());
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent arg0)
-			{
-			}
-		});
-		
-		chckbxDownload.addChangeListener(new ChangeListener()
-		{
-			public void stateChanged(ChangeEvent arg0)
-			{
-				
-				if (chckbxDownload.isSelected())
-				{
-					chckbxUnzip.setEnabled(true);
-					chckbxCloseAsOld.setSelected(false);
-				}
-				else
-				{
-					chckbxUnzip.setEnabled(false);
-				}
-			}
-		});
-		chckbxUnzip.addChangeListener(new ChangeListener()
-		{
-			public void stateChanged(ChangeEvent arg0)
-			{
-				if (chckbxUnzip.isSelected() && chckbxUnzip.isEnabled())
-				{
-					chckbxAnalyze.setEnabled(true);
-				}
-				else
-				{
-					chckbxAnalyze.setEnabled(false);
-				}
-			}
-		});
-		chckbxAssign.addChangeListener(new ChangeListener()
-		{
-			@Override
-			public void stateChanged(ChangeEvent e)
-			{
-				if (chckbxAssign.isSelected())
-				{
-					chckbxUnassign.setSelected(false);
-				}
-			}
-		});
-		chckbxUnassign.addChangeListener(new ChangeListener()
-		{
-			@Override
-			public void stateChanged(ChangeEvent e)
-			{
-				if (chckbxUnassign.isSelected())
-				{
-					chckbxAssign.setSelected(false);
-				}
-			}
-		});
-		chckbxLabels.addChangeListener(new ChangeListener()
-		{
-			@Override
-			public void stateChanged(ChangeEvent e)
-			{
-				if (chckbxLabels.isSelected())
-				{
-					chckbxRemLabels.setSelected(false);
-				}
-			}
-		});
-		chckbxRemLabels.addChangeListener(new ChangeListener()
-		{
-			@Override
-			public void stateChanged(ChangeEvent e)
-			{
-				if (chckbxRemLabels.isSelected())
-				{
-					chckbxLabels.setSelected(false);
-				}
-			}
-		});
-		chckbxCloseAsOld.addChangeListener(new ChangeListener()
-		{
-			public void stateChanged(ChangeEvent e)
-			{
-				if (chckbxCloseAsOld.isSelected())
-				{
-					chckbxDownload.setSelected(false);
-				}
-			}
-		});
-	}
-	
-	/**
-	 * Interface functions -------------------------------
-	 */
-	private void btnClearAction()
-	{
-		textDownload.setText("");
-	}
-	
-	private void btnPasteAction()
-	{
-		textDownload.setText("");
-		Scanner scanner;
-		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		
-		try
-		{
-			String string = (String) clipboard.getData(DataFlavor.stringFlavor);
-			scanner = new Scanner(string);
-			String str;
-			
-			while (scanner.hasNext())
-			{
-				str = scanner.nextLine();
-				textDownload.setText(textDownload.getText() + str + "\n");
-			}
-		}
-		catch (Exception ex)
-		{
-			JOptionPane.showMessageDialog(this, "An error occurred. Please check logs.");
-			Logger.log(Logger.TAG_CRSMANAGER, ex.getMessage());
-			ex.printStackTrace();
-		}
-	}
-	
-	private void btnOpenAction()
-	{
-		for (String s : textDownload.getText().split("\n"))
-		{
-			try
-			{
-				s = trimCR(s);
-				Desktop.getDesktop().browse(new URI("http://idart.mot.com/browse/" + s));
-				Thread.sleep(500);
-			}
-			catch (Exception ex)
-			{
-				JOptionPane.showMessageDialog(this, "Exception: " + ex.getMessage());
-			}
-		}
-	}
-	
-	public String trimCR(String s)
-	{
-		s = s.replaceAll("\n", "");
-		s = s.replaceAll("\r", "");
-		s = s.replaceAll("\t", "");
-		s = s.trim();
-		return s;
-	}
-	
-	public void updateDiagList()
-	{
-		updateUI();
-		repaint();
-		revalidate();
-	}
-	
-	public void addLogLine(String line)
-	{
-		if (textLog.getText().split("\n").length > 150)
-		{
-			try
-			{
-				File f = new File("Data\\logs\\log_" + new Timestamp(System.currentTimeMillis()).toString().replace(":", "_") + ".txt");
-				BufferedWriter bw = new BufferedWriter(new FileWriter(f));
-				bw.write(textLog.getText());
-				bw.close();
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-			
-			textLog.setText("");
-		}
-		
-		Date date = new Date();
-		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-		// format.setTimeZone(TimeZone.getTimeZone("Brazil/East"));
-		
-		textLog.setText(textLog.getText() + format.format(date) + "\t" + line + "\n");
-		textLog.setCaretPosition(textLog.getText().length());
-	}
-	
-	/**
-	 * Aux functions --------------------------------------------------------
-	 */
-	public void saveUserData()
-	{
-		String xmlPath[] = new String[] {"crs_jira_pane", ""};
-		
-		xmlPath[1] = "path";
-		XmlMngr.setUserValueOf(xmlPath, textPath.getText());
-		xmlPath[1] = "assign";
-		XmlMngr.setUserValueOf(xmlPath, chckbxAssign.isSelected() + "");
-		xmlPath[1] = "unassign";
-		XmlMngr.setUserValueOf(xmlPath, chckbxUnassign.isSelected() + "");
-		xmlPath[1] = "label";
-		XmlMngr.setUserValueOf(xmlPath, chckbxLabels.isSelected() + "");
-		xmlPath[1] = "rem_label";
-		XmlMngr.setUserValueOf(xmlPath, chckbxRemLabels.isSelected() + "");
-		xmlPath[1] = "labels";
-		XmlMngr.setUserValueOf(xmlPath, textLabels.getText());
-		xmlPath[1] = "download";
-		XmlMngr.setUserValueOf(xmlPath, chckbxDownload.isSelected() + "");
-		xmlPath[1] = "unzip";
-		XmlMngr.setUserValueOf(xmlPath, chckbxUnzip.isSelected() + "");
-		xmlPath[1] = "analyze";
-		XmlMngr.setUserValueOf(xmlPath, chckbxAnalyze.isSelected() + "");
-		xmlPath[1] = "close";
-		XmlMngr.setUserValueOf(xmlPath, chckbxCloseAsOld.isSelected() + "");
-		xmlPath[1] = "ignore";
-		XmlMngr.setUserValueOf(xmlPath, chckbxIgnoreAnalyzed.isSelected() + "");
-		
-		Logger.log(Logger.TAG_CRSMANAGER, "CrsManagerPane data saved");
-	}
-	
-	private void loadUserData()
-	{
-		String xmlPath[] = new String[] {"crs_jira_pane", ""};
-		
-		xmlPath[1] = "path";
-		textPath.setText(XmlMngr.getUserValueOf(xmlPath));
-		SharedObjs.setDownloadPath(textPath.getText());
-		
-		xmlPath[1] = "assign";
-		chckbxAssign.setSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		xmlPath[1] = "unassign";
-		chckbxUnassign.setSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		
-		xmlPath[1] = "label";
-		chckbxLabels.setSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		xmlPath[1] = "rem_label";
-		chckbxRemLabels.setSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		
-		xmlPath[1] = "labels";
-		textLabels.setText(XmlMngr.getUserValueOf(xmlPath));
-		
-		xmlPath[1] = "download";
-		chckbxDownload.setSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		System.out.println("" + Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		
-		xmlPath[1] = "unzip";
-		chckbxUnzip.setSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		
-		xmlPath[1] = "analyze";
-		chckbxAnalyze.setSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		
-		xmlPath[1] = "close";
-		chckbxCloseAsOld.setSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		
-		xmlPath[1] = "ignore";
-		chckbxIgnoreAnalyzed.setSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		
-		Logger.log(Logger.TAG_CRSMANAGER, "CrsManagerPane variables Loaded");
-	}
-	
-	public void runScript(String folder) throws IOException
-	{
-		Logger.log(Logger.TAG_CRSMANAGER, "Generating report output for " + folder);
-		
-		// File seek and load configuration
-		File f = new File(folder);
-		File[] filesList = f.listFiles();
-		String reportFile = null, sCurrentLine;
-		String bugreport = null;
-		
-		addLogLine("Generating bugreport for " + f.getName() + " ...");
-		
-		// Look for the file
-		for (int j = 0; j < filesList.length; j++)
-		{
-			if (filesList[j].isFile())
-			{
-				String files = filesList[j].getName();
-				if (files.toLowerCase().endsWith(".txt") && files.toLowerCase().contains("report_info"))
-				{
-					reportFile = folder + "\\" + files;
-					break;
-				}
-			}
-		}
-		
-		// Try to open file
-		BufferedReader br = null;
-		
-		if (reportFile == null)
-		{
-			Logger.log(Logger.TAG_CRSMANAGER, "Log not found: " + reportFile);
-			Logger.log(Logger.TAG_CRSMANAGER, "Not possible to find product ");
-			JOptionPane.showMessageDialog(null, "Could not find product ! Report output not being generated for this CR");
-			return;
-		}
-		else
-		{
-			br = new BufferedReader(new FileReader(reportFile));
-		}
-		
-		// Parse file
-		boolean parsed = false;
-		String bpVersion = "";
-		
-		while ((sCurrentLine = br.readLine()) != null)
-		{
-			sCurrentLine = sCurrentLine.toLowerCase();
-			if (sCurrentLine.contains("bpversion"))
-			{
-				Logger.log(Logger.TAG_CRSMANAGER, "--- Initial line: " + sCurrentLine);
-				Matcher m = Pattern.compile(".*bpversion\": \".+ (.+)\".*").matcher(sCurrentLine);
-				if (m.matches())
-				{
-					bpVersion = m.group(1);
-					Logger.log(Logger.TAG_CRSMANAGER, "bpVersion: " + bpVersion);
-					bpVersion = bpVersion.substring(0, bpVersion.indexOf("_"));
-				}
-			}
-			else if (sCurrentLine.contains("product"))
-			{
-				Logger.log(Logger.TAG_CRSMANAGER, "--- Initial line: " + sCurrentLine);
-				sCurrentLine = sCurrentLine.replace("\"product\": \"", "").replace(" ", "");
-				
-				// BATTRIAGE-212
-				if (sCurrentLine.indexOf("_") >= 0)
-				{
-					sCurrentLine = sCurrentLine.substring(0, sCurrentLine.indexOf("_"));
-				}
-				else if (sCurrentLine.indexOf("\"") >= 0)
-				{
-					sCurrentLine = sCurrentLine.substring(0, sCurrentLine.indexOf("\""));
-				}
-				Logger.log(Logger.TAG_CRSMANAGER, sCurrentLine);
-				
-				if (sCurrentLine.equals("griffin") || sCurrentLine.equals("unknown"))
-				{
-					sCurrentLine = bpVersion;
-				}
-				
-				Logger.log(Logger.TAG_CRSMANAGER, "Product name detected: " + sCurrentLine);
-				
-				SharedObjs.copyScript(new File("Data\\scripts\\_Base.pl"), new File(folder + "\\build_report.pl"));
-				
-				// Configure build report battery capacity
-				PrintWriter out = null;
-				try
-				{
-					@SuppressWarnings("resource")
-					Scanner scanner = new Scanner(new File(folder + "\\build_report.pl"));
-					String content = scanner.useDelimiter("\\Z").next();
-					scanner.close();
-					
-					// Get/Set battery capacity
-					if (SharedObjs.advOptions.getBatCapValue(sCurrentLine) != null)
-					{
-						content = content.replace("#bat_cap#", SharedObjs.advOptions.getBatCapValue(sCurrentLine));
-					}
-					else
-					{
-						String pName = JOptionPane.showInputDialog("Type the product name", sCurrentLine);
-						String bCap = JOptionPane.showInputDialog("Type the battery capacity");
-						SharedObjs.advOptions.addNewBatCapValue(pName, bCap);
-						content = content.replace("#bat_cap#", bCap);
-					}
-					
-					out = new PrintWriter(folder + "\\build_report.pl");
-					out.println(content);
-					parsed = true;
-				}
-				catch (FileNotFoundException e)
-				{
-					e.printStackTrace();
-				}
-				finally
-				{
-					out.close();
-				}
-				
-				break;
-			}
-		}
-		
-		if (!parsed)
-		{
-			PrintWriter out = null;
-			try
-			{
-				Logger.log(Logger.TAG_CRSMANAGER, "Could not find product  or product battery capacity. Using 3000 as bat cap");
-				JOptionPane.showMessageDialog(null, "Could not find product  or product battery capacity.\nUsing 3000 as battery capacity");
-				@SuppressWarnings("resource")
-				Scanner scanner = new Scanner(new File(folder + "\\build_report.pl"));
-				String content = scanner.useDelimiter("\\Z").next();
-				content = content.replace("#bat_cap#", "3000");
-				out = new PrintWriter(folder + "\\build_report.pl");
-				out.println(content);
-				out.close();
-				parsed = true;
-			}
-			catch (FileNotFoundException e)
-			{
-				e.printStackTrace();
-			}
-			finally
-			{
-				if (out != null)
-					out.close();
-			}
-		}
-		
-		if (br != null)
-			br.close();
-		
-		for (File file : filesList)
-		{
-			if (file.getName().contains("bugreport"))
-			{
-				bugreport = file.getName();
-			}
-		}
-		
-		ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", "cd \"" + folder + "\" && build_report.pl " + bugreport + " > report-output.txt");
-		Logger.log(Logger.TAG_CRSMANAGER, "Report Output file: " + bugreport);
-		
-		for (String c : builder.command())
-		{
-			Logger.log(Logger.TAG_CRSMANAGER, "Commands: " + c);
-		}
-		
-		builder.redirectErrorStream(true);
-		Process p = builder.start();
-		BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
-		String line = "";
-		String output = ""; // workaround for report outout 0kb
-		
-		while (true)
-		{
-			line = r.readLine();
-			
-			if (line == null)
-			{
-				break;
-			}
-			
-			output += line + "\n";
-			
-			Logger.log(Logger.TAG_CRSMANAGER, line);
-		}
-		
-		r.close();
-		
-		if (new File(folder + "/report-output.txt").length() < 10)
-		{
-			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(folder + "/report-output.txt")));
-			bw.write(output);
-			bw.close();
-		}
-		
-		addLogLine("Report output generated for " + f.getName());
-	}
-	
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Supportive methods ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1033,7 +495,7 @@ public class CrsManagerPane extends JPanel
 	
 	public void setBtnDownloadEnabled(Boolean value)
 	{
-		btnDownload.setEnabled(value);
+		btnExecute.setEnabled(value);
 	}
 	
 	public void setChckbxAnalyzeEnabled(Boolean value)
@@ -1149,6 +611,11 @@ public class CrsManagerPane extends JPanel
 		return chckbxIgnoreAnalyzed.isSelected();
 	}
 	
+	public Boolean isChckbxUnzipEnabled()
+	{
+		return chckbxUnzip.isEnabled();
+	}
+	
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Setters ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1170,6 +637,11 @@ public class CrsManagerPane extends JPanel
 	public void setTextLog(String text)
 	{
 		textLog.setText(text);
+	}
+
+	public void setTextLogCarretPosition(int pos)
+	{
+		textLog.setCaretPosition(pos);
 	}
 	
 	public void setTextPane(String text)

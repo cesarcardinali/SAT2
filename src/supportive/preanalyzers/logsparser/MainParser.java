@@ -67,7 +67,7 @@ public class MainParser
 		if (year.equals(""))
 		{
 			Logger.log(Logger.TAG_CONSUME, "Could not parse year from logs. So, SAT can not parse Main log.");
-			SharedObjs.crsManagerPane.addLogLine("Could not find 'year' from bugreport. SAT will not parse main log.");
+			SharedObjs.addLogLine("Could not find 'year' from bugreport. SAT will not parse main log.");
 			
 			return false;
 		}

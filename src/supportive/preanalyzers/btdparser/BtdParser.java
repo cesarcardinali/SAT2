@@ -1518,8 +1518,8 @@ public class BtdParser
 						
 						if (btdState.getEnd() < btdState.getStart() || btdState.getDuration() < 0)
 						{
-							SharedObjs.crsManagerPane.addLogLine("This BTD contains data errors. Some inconsistent periods will be ignored.");
-							SharedObjs.crsManagerPane.addLogLine("Is recommended to check it for date errors and periods without data.");
+							SharedObjs.addLogLine("This BTD contains data errors. Some inconsistent periods will be ignored.");
+							SharedObjs.addLogLine("Is recommended to check it for date errors and periods without data.");
 							rs = null;
 						}
 						else

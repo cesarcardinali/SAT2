@@ -39,12 +39,12 @@ public class OldCRsCloser implements Runnable
 		
 		if (n == 0)
 		{
-			SharedObjs.crsManagerPane.addLogLine("Connecting to Jira");
+			SharedObjs.addLogLine("Connecting to Jira");
 			jira = new JiraSatApi(JiraSatApi.DEFAULT_JIRA_URL, SharedObjs.getUser(), SharedObjs.getPass());
 			
 			for (String cr : crs)
 			{
-				SharedObjs.crsManagerPane.addLogLine("Assigning " + cr);
+				SharedObjs.addLogLine("Assigning " + cr);
 				jira.assignIssue(cr);
 				try
                 {
@@ -57,19 +57,19 @@ public class OldCRsCloser implements Runnable
 				
 				if (SharedObjs.crsManagerModel.getLabels().length > 0)
 				{
-					SharedObjs.crsManagerPane.addLogLine("Adding labels");
+					SharedObjs.addLogLine("Adding labels");
 					String output = jira.addLabel(cr, SharedObjs.crsManagerModel.getLabels());
 					if (output.contains("error"))
 					{
-						SharedObjs.crsManagerPane.addLogLine("ERROR Adding labels! ");
+						SharedObjs.addLogLine("ERROR Adding labels! ");
 						noLabels.add(cr);
 					}
 				}
-				SharedObjs.crsManagerPane.addLogLine("Closing ...");
+				SharedObjs.addLogLine("Closing ...");
 				jira.closeIssue(cr,
 				                JiraSatApi.CANCELLED,
 				                "Closing this issue since it's was reported in an old release. Analysis is being focused on latest ones. If the issue happens again, please, raise a new Bug2go.");
-				SharedObjs.crsManagerPane.addLogLine(cr + " closed");
+				SharedObjs.addLogLine(cr + " closed");
 			}
 			
 			ParallelTextPopup list = new ParallelTextPopup();

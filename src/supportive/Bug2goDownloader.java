@@ -260,7 +260,7 @@ public class Bug2goDownloader implements Runnable
 		{
 			if (!login())
 			{
-				SharedObjs.crsManagerPane.addLogLine("Bug2Go login failed");
+				SharedObjs.addLogLine("Bug2Go login failed");
 				return;
 			}
 		}
@@ -273,7 +273,7 @@ public class Bug2goDownloader implements Runnable
 		
 		// Create a thread pool of size 5
 		executor = Executors.newFixedThreadPool(5);
-		SharedObjs.crsManagerPane.addLogLine("Downloading b2g files ...");
+		SharedObjs.addLogLine("Downloading b2g files ...");
 		
 		// While any of the lists still have an item
 		while (!bug2goListSubmitted.isEmpty() || !bug2goListInProgress.isEmpty() || !bug2goListRetry.isEmpty())
@@ -385,7 +385,7 @@ public class Bug2goDownloader implements Runnable
 		}
 		
 		Logger.log(Logger.TAG_BUG2GODOWNLOADER, "Downloads finished");
-		SharedObjs.crsManagerPane.addLogLine("Downloads finished");
+		SharedObjs.addLogLine("Downloads finished");
 		
 		// If there was any error
 		if (errors == 1)
@@ -404,13 +404,13 @@ public class Bug2goDownloader implements Runnable
 					String b2gID = file.getName().substring(0, file.getName().indexOf("_")); //Pegar b2gID pelo nome do arquivo;
 					
 					// Unzip
-					SharedObjs.crsManagerPane.addLogLine("Unzipping " + b2gID + " ...");
+					SharedObjs.addLogLine("Unzipping " + b2gID + " ...");
 					
 					UnZip.unZipIt(file.getAbsolutePath(), file.getAbsolutePath().substring(0, file.getAbsolutePath().length() - 28));
 					
 					file = new File(file.getAbsolutePath().substring(0, file.getAbsolutePath().length() - 28));
 					
-					SharedObjs.crsManagerPane.addLogLine("Done");
+					SharedObjs.addLogLine("Done");
 					
 					// Analyze
 					if (SharedObjs.crsManagerPane.isChckbxAnalyzeSelected())
@@ -420,18 +420,18 @@ public class Bug2goDownloader implements Runnable
 						// Check if should be ignored
 						if(cr != null)
 						{
-							SharedObjs.crsManagerPane.addLogLine("Ignoring analysis process for " + b2gID);
+							SharedObjs.addLogLine("Ignoring analysis process for " + b2gID);
 						}
 						else
 						{
-							SharedObjs.crsManagerPane.addLogLine("Pre analyzing CR ...");
+							SharedObjs.addLogLine("Pre analyzing CR ...");
 							
 							CrChecker crChecker = new CrChecker(file.getAbsolutePath());
 							
 							if (crChecker.checkCR())
 							{
 								SharedObjs.getCrsList().getCrByB2gId(file.getName()).setStatus("Closed");
-								SharedObjs.crsManagerPane.addLogLine("CR closed as " + SharedObjs.getCrsList().getCrByB2gId(file.getName()).getResolution());
+								SharedObjs.addLogLine("CR closed as " + SharedObjs.getCrsList().getCrByB2gId(file.getName()).getResolution());
 							}
 							
 							if (!crChecker.getIncompleteFiles().contains("bugreport"))
@@ -439,7 +439,7 @@ public class Bug2goDownloader implements Runnable
 								try
 								// BATTRIAGE-175
 								{
-									SharedObjs.crsManagerPane.runScript(file.getAbsolutePath());
+									SharedObjs.runScript(file.getAbsolutePath());
 								}
 								catch (IOException e)
 								{
@@ -449,7 +449,7 @@ public class Bug2goDownloader implements Runnable
 							}
 							else
 							{
-								SharedObjs.crsManagerPane.addLogLine("No bugreport file. Report output not generated.");
+								SharedObjs.addLogLine("No bugreport file. Report output not generated.");
 								Logger.log(Logger.TAG_BUG2GODOWNLOADER, "No bugreport file. Report output not generated.");
 							}
 						}
@@ -485,7 +485,7 @@ public class Bug2goDownloader implements Runnable
 				SharedObjs.getOpenedList().setVisible(true);
 			}
 			
-			SharedObjs.crsManagerPane.addLogLine("All done!");
+			SharedObjs.addLogLine("All done!");
 		}
 		
 		SharedObjs.crsManagerController.enableViewOptionsAndBtns();

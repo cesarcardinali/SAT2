@@ -1,11 +1,24 @@
 package core;
 
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Scanner;
 import java.util.concurrent.Semaphore;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
@@ -158,6 +171,8 @@ public class SharedObjs
 		
 		crsManagerPane = new CrsManagerPane();
 		crsManagerModel = new CrsManagerModel();
+		crsManagerController = new CrsManagerController();
+		crsManagerController.startController(crsManagerPane, crsManagerModel);
 		
 		optionsPane = new OptionsPane();
 		optionsController = new OptionsController();
@@ -527,10 +542,238 @@ public class SharedObjs
 		SharedObjs.downloadPath = downloadPath;
 	}
 	
-	// Static General Methods
+	// General Methods
 	public static void copyScript(File source, File dest) throws IOException
 	{
 		FileUtils.copyFile(source, dest);
+	}
+	
+	public static void runScript(String folder) throws IOException
+	{
+		Logger.log(Logger.TAG_CRSMANAGER, "Generating report output for " + folder);
+		
+		// File seek and load configuration
+		File f = new File(folder);
+		File[] filesList = f.listFiles();
+		String reportFile = null, sCurrentLine;
+		String bugreport = null;
+		
+		addLogLine("Generating bugreport for " + f.getName() + " ...");
+		
+		// Look for the file
+		for (int j = 0; j < filesList.length; j++)
+		{
+			if (filesList[j].isFile())
+			{
+				String files = filesList[j].getName();
+				if (files.toLowerCase().endsWith(".txt") && files.toLowerCase().contains("report_info"))
+				{
+					reportFile = folder + "\\" + files;
+					break;
+				}
+			}
+		}
+		
+		// Try to open file
+		BufferedReader br = null;
+		
+		if (reportFile == null)
+		{
+			Logger.log(Logger.TAG_CRSMANAGER, "Log not found: " + reportFile);
+			Logger.log(Logger.TAG_CRSMANAGER, "Not possible to find product ");
+			JOptionPane.showMessageDialog(null, "Could not find product ! Report output not being generated for this CR");
+			return;
+		}
+		else
+		{
+			br = new BufferedReader(new FileReader(reportFile));
+		}
+		
+		// Parse file
+		boolean parsed = false;
+		String bpVersion = "";
+		
+		while ((sCurrentLine = br.readLine()) != null)
+		{
+			sCurrentLine = sCurrentLine.toLowerCase();
+			if (sCurrentLine.contains("bpversion"))
+			{
+				Logger.log(Logger.TAG_CRSMANAGER, "--- Initial line: " + sCurrentLine);
+				Matcher m = Pattern.compile(".*bpversion\": \".+ (.+)\".*").matcher(sCurrentLine);
+				if (m.matches())
+				{
+					bpVersion = m.group(1);
+					Logger.log(Logger.TAG_CRSMANAGER, "bpVersion: " + bpVersion);
+					bpVersion = bpVersion.substring(0, bpVersion.indexOf("_"));
+				}
+			}
+			else if (sCurrentLine.contains("product"))
+			{
+				Logger.log(Logger.TAG_CRSMANAGER, "--- Initial line: " + sCurrentLine);
+				sCurrentLine = sCurrentLine.replace("\"product\": \"", "").replace(" ", "");
+				
+				// BATTRIAGE-212
+				if (sCurrentLine.indexOf("_") >= 0)
+				{
+					sCurrentLine = sCurrentLine.substring(0, sCurrentLine.indexOf("_"));
+				}
+				else if (sCurrentLine.indexOf("\"") >= 0)
+				{
+					sCurrentLine = sCurrentLine.substring(0, sCurrentLine.indexOf("\""));
+				}
+				Logger.log(Logger.TAG_CRSMANAGER, sCurrentLine);
+				
+				if (sCurrentLine.equals("griffin") || sCurrentLine.equals("unknown"))
+				{
+					sCurrentLine = bpVersion;
+				}
+				
+				Logger.log(Logger.TAG_CRSMANAGER, "Product name detected: " + sCurrentLine);
+				
+				SharedObjs.copyScript(new File("Data\\scripts\\_Base.pl"), new File(folder + "\\build_report.pl"));
+				
+				// Configure build report battery capacity
+				PrintWriter out = null;
+				try
+				{
+					@SuppressWarnings("resource")
+					Scanner scanner = new Scanner(new File(folder + "\\build_report.pl"));
+					String content = scanner.useDelimiter("\\Z").next();
+					scanner.close();
+					
+					// Get/Set battery capacity
+					if (SharedObjs.advOptions.getBatCapValue(sCurrentLine) != null)
+					{
+						content = content.replace("#bat_cap#", SharedObjs.advOptions.getBatCapValue(sCurrentLine));
+					}
+					else
+					{
+						String pName = JOptionPane.showInputDialog("Type the product name", sCurrentLine);
+						String bCap = JOptionPane.showInputDialog("Type the battery capacity");
+						SharedObjs.advOptions.addNewBatCapValue(pName, bCap);
+						content = content.replace("#bat_cap#", bCap);
+					}
+					
+					out = new PrintWriter(folder + "\\build_report.pl");
+					out.println(content);
+					parsed = true;
+				}
+				catch (FileNotFoundException e)
+				{
+					e.printStackTrace();
+				}
+				finally
+				{
+					out.close();
+				}
+				
+				break;
+			}
+		}
+		
+		if (!parsed)
+		{
+			PrintWriter out = null;
+			try
+			{
+				Logger.log(Logger.TAG_CRSMANAGER, "Could not find product  or product battery capacity. Using 3000 as bat cap");
+				JOptionPane.showMessageDialog(null, "Could not find product  or product battery capacity.\nUsing 3000 as battery capacity");
+				@SuppressWarnings("resource")
+				Scanner scanner = new Scanner(new File(folder + "\\build_report.pl"));
+				String content = scanner.useDelimiter("\\Z").next();
+				content = content.replace("#bat_cap#", "3000");
+				out = new PrintWriter(folder + "\\build_report.pl");
+				out.println(content);
+				out.close();
+				parsed = true;
+			}
+			catch (FileNotFoundException e)
+			{
+				e.printStackTrace();
+			}
+			finally
+			{
+				if (out != null)
+					out.close();
+			}
+		}
+		
+		if (br != null)
+			br.close();
+		
+		for (File file : filesList)
+		{
+			if (file.getName().contains("bugreport"))
+			{
+				bugreport = file.getName();
+			}
+		}
+		
+		ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", "cd \"" + folder + "\" && build_report.pl " + bugreport + " > report-output.txt");
+		Logger.log(Logger.TAG_CRSMANAGER, "Report Output file: " + bugreport);
+		
+		for (String c : builder.command())
+		{
+			Logger.log(Logger.TAG_CRSMANAGER, "Commands: " + c);
+		}
+		
+		builder.redirectErrorStream(true);
+		Process p = builder.start();
+		BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		String line = "";
+		String output = ""; // workaround for report outout 0kb
+		
+		while (true)
+		{
+			line = r.readLine();
+			
+			if (line == null)
+			{
+				break;
+			}
+			
+			output += line + "\n";
+			
+			Logger.log(Logger.TAG_CRSMANAGER, line);
+		}
+		
+		r.close();
+		
+		if (new File(folder + "/report-output.txt").length() < 10)
+		{
+			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(folder + "/report-output.txt")));
+			bw.write(output);
+			bw.close();
+		}
+		
+		addLogLine("Report output generated for " + f.getName());
+	}
+
+	public static void addLogLine(String line)
+	{
+		if (crsManagerPane.getTextLog().split("\n").length > 150)
+		{
+			try
+			{
+				File f = new File("Data\\logs\\log_" + new Timestamp(System.currentTimeMillis()).toString().replace(":", "_") + ".txt");
+				BufferedWriter bw = new BufferedWriter(new FileWriter(f));
+				bw.write(crsManagerPane.getTextLog());
+				bw.close();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+			
+			crsManagerPane.setTextLog("");
+		}
+		
+		Date date = new Date();
+		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+		// format.setTimeZone(TimeZone.getTimeZone("Brazil/East"));
+		
+		crsManagerPane.setTextLog(crsManagerPane.getTextLog() + format.format(date) + "\t" + line + "\n");
+		crsManagerPane.setTextLogCarretPosition(crsManagerPane.getTextLog().length());
 	}
 	
 	public static void acquireSemaphore() throws InterruptedException

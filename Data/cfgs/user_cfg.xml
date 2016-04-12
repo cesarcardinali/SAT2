@@ -5,13 +5,13 @@
     <rootPath>C:\SAT\CRs</rootPath>
   </parser_pane>
   <crs_jira_pane>
-    <path>C:\SAT\CRs\IKUT-851788\BT</path>
+    <path>C:\SAT\CRs\MVP Tests</path>
     <assign>false</assign>
     <label>false</label>
     <labels>cd_auto</labels>
     <download>true</download>
     <unzip>true</unzip>
-    <analyze>false</analyze>
+    <analyze>true</analyze>
     <close>false</close>
     <ignore>false</ignore>
     <unassign>false</unassign>

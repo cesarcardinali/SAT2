@@ -169,7 +169,7 @@ public class SAT2 extends JFrame
 				while (run == 0)
 				{
 					Logger.log(Logger.TAG_SAT, "Saving all user data ...");
-					SharedObjs.crsManagerPane.saveUserData();
+					SharedObjs.crsManagerController.saveUIData();
 					SharedObjs.parserController.savePaneData();
 					SharedObjs.optionsController.saveViewData();
 					SharedObjs.updateUidsXML();

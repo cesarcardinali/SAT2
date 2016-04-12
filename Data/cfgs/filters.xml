@@ -4,12 +4,12 @@
   <!-- User defined filters: ! -->
   <myFilters>
     <item_1>
-      <name>errors</name>
-      <regex>.*error.*</regex>
-      <header>Errors:</header>
+      <name>DIAG_WS Wakeups</name>
+      <regex>.*active wakeup source: DIAG_WS.*</regex>
+      <header>- DIAG_WS wakeups found in kernel log:</header>
       <owner>cesarc</owner>
-      <main>true</main>
-      <system>true</system>
+      <main>false</main>
+      <system>false</system>
       <kernel>true</kernel>
       <radio>false</radio>
       <bugreport>false</bugreport>
@@ -17,40 +17,72 @@
       <shared>false</shared>
       <editable>false</editable>
       <active>false</active>
-      <last_update>2016-02-29 07:06:36</last_update>
+      <last_update>2016-04-07 10:30:07</last_update>
     </item_1>
     <item_2>
-      <name>radio</name>
-      <regex>.*DATA_REGISTRATION.*</regex>
-      <header>Radio Network</header>
-      <owner>cesarc</owner>
-      <main>false</main>
-      <system>false</system>
-      <kernel>false</kernel>
-      <radio>true</radio>
-      <bugreport>false</bugreport>
-      <routput>false</routput>
-      <shared>true</shared>
-      <editable>false</editable>
-      <active>false</active>
-      <last_update>2016-02-29 06:59:27</last_update>
-    </item_2>
-    <item_3>
-      <name>SQL Messages</name>
-      <regex>.*(sql|SQL).*(ERRORS?|Errors?|errors?).*</regex>
-      <header>SQL messages at Main log:</header>
+      <name>All Errors</name>
+      <regex>.*error.*</regex>
+      <header />
       <owner>cesarc</owner>
       <main>true</main>
-      <system>false</system>
-      <kernel>false</kernel>
+      <system>true</system>
+      <kernel>true</kernel>
       <radio>false</radio>
       <bugreport>true</bugreport>
       <routput>false</routput>
       <shared>true</shared>
       <editable>false</editable>
       <active>false</active>
-      <last_update>2016-03-01 10:13:09</last_update>
+      <last_update>2016-04-07 10:30:07</last_update>
+    </item_2>
+    <item_3>
+      <name>BR-Alarm</name>
+      <regex>.*AlarmManager: send.*</regex>
+      <header>Alarms info</header>
+      <owner>cesarc</owner>
+      <main>false</main>
+      <system>false</system>
+      <kernel>false</kernel>
+      <radio>false</radio>
+      <bugreport>true</bugreport>
+      <routput>false</routput>
+      <shared>false</shared>
+      <editable>false</editable>
+      <active>false</active>
+      <last_update>2016-04-07 10:30:07</last_update>
     </item_3>
+    <item_4>
+      <name>BR-Temp</name>
+      <regex>.*POWER_SUPPLY_TEMP.*</regex>
+      <header>Temperature data</header>
+      <owner>cesarc</owner>
+      <main>false</main>
+      <system>false</system>
+      <kernel>false</kernel>
+      <radio>false</radio>
+      <bugreport>true</bugreport>
+      <routput>false</routput>
+      <shared>false</shared>
+      <editable>false</editable>
+      <active>false</active>
+      <last_update>2016-04-07 10:30:08</last_update>
+    </item_4>
+    <item_5>
+      <name>BR-Network</name>
+      <regex>.*DATA_REGISTRATION_.*</regex>
+      <header>Data registration info:</header>
+      <owner>cesarc</owner>
+      <main>false</main>
+      <system>false</system>
+      <kernel>false</kernel>
+      <radio>false</radio>
+      <bugreport>true</bugreport>
+      <routput>false</routput>
+      <shared>false</shared>
+      <editable>false</editable>
+      <active>false</active>
+      <last_update>2016-04-07 10:30:08</last_update>
+    </item_5>
   </myFilters>
   <!-- Users shared filters: ! -->
   <sharedFilters>
@@ -120,54 +152,5 @@
     </item_4>
   </sharedFilters>
   <!-- Active filters: ! -->
-  <activeFilters>
-    <item_1>
-      <name>errors</name>
-      <regex>.*error.*</regex>
-      <header>Errors:</header>
-      <owner>cesarc</owner>
-      <main>true</main>
-      <system>true</system>
-      <kernel>true</kernel>
-      <radio>false</radio>
-      <bugreport>false</bugreport>
-      <routput>false</routput>
-      <shared>false</shared>
-      <editable>false</editable>
-      <active>false</active>
-      <last_update>2016-02-29 07:06:36</last_update>
-    </item_1>
-    <item_2>
-      <name>radio</name>
-      <regex>.*DATA_REGISTRATION.*</regex>
-      <header>Radio Network</header>
-      <owner>cesarc</owner>
-      <main>false</main>
-      <system>false</system>
-      <kernel>false</kernel>
-      <radio>true</radio>
-      <bugreport>false</bugreport>
-      <routput>false</routput>
-      <shared>true</shared>
-      <editable>false</editable>
-      <active>false</active>
-      <last_update>2016-02-29 06:59:27</last_update>
-    </item_2>
-    <item_3>
-      <name>SQL Messages</name>
-      <regex>.*(sql|SQL).*(ERRORS?|Errors?|errors?).*</regex>
-      <header>SQL messages at Main log:</header>
-      <owner>cesarc</owner>
-      <main>true</main>
-      <system>false</system>
-      <kernel>false</kernel>
-      <radio>false</radio>
-      <bugreport>true</bugreport>
-      <routput>false</routput>
-      <shared>true</shared>
-      <editable>false</editable>
-      <active>false</active>
-      <last_update>2016-03-01 10:13:09</last_update>
-    </item_3>
-  </activeFilters>
+  <activeFilters />
 </SAT>
