@@ -37,6 +37,12 @@ public class OptionsPane extends JPanel
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Variables -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	private NotificationDialog warning;
+	private JPasswordField     textPassword;
+	private JRadioButton       rdbtnSingleclick;
+	private JRadioButton       rdbtnDouble;
+	private JRadioButton       rdbtnTAnalisys;
+	private JRadioButton       rdbtnNotepad;
 	private JTextField         textConsumeFull;
 	private JTextField         textConsumeOff;
 	private JTextField         textConsumeOn;
@@ -50,17 +56,6 @@ public class OptionsPane extends JPanel
 	private JTextField         textTether;
 	private JTextField         textDiag;
 	private JTextField         textUsername;
-	private JPasswordField     textPassword;
-	private JLabel             lblServerStatus;
-	private JLabel             lblExpandCollapseIco;
-	private JLabel             lblComments;
-	private JLabel             lblParserOptions;
-	private JLabel             lblMoreOptions;
-	private JLabel             lblUserData;
-	private JRadioButton       rdbtnSingleclick;
-	private JRadioButton       rdbtnDouble;
-	private JRadioButton       rdbtnTAnalisys;
-	private JRadioButton       rdbtnNotepad;
 	private JCheckBox          chkTextWrap;
 	private JButton            btnManageFilters;
 	private JButton            btnMoreOptions;
@@ -71,8 +66,14 @@ public class OptionsPane extends JPanel
 	private JButton            btnB2gHelp;
 	private JButton            btnDiagHelp;
 	private JButton            btnTetherHelp;
+	private JLabel             lblServerStatus;
+	private JLabel             lblExpandCollapseIco;
+	private JLabel             lblComments;
+	private JLabel             lblParserOptions;
+	private JLabel             lblMoreOptions;
+	private JLabel             lblUserData;
 	private JPanel             panel_2;
-	private NotificationDialog warning;
+	
 	
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Constructor -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------

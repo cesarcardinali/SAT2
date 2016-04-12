@@ -1,0 +1,15 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+	hideDotFiles = dotGitOnly
+[remote "SAT"]
+	url = git@github.com:cesarcardinali/SAT.git
+	fetch = +refs/heads/*:refs/remotes/SAT/*
+	push = +refs/heads/stable1:refs/heads/stable1
+[branch "stable1"]
+	remote = SAT
+	merge = refs/heads/stable1
