@@ -199,14 +199,14 @@ public class CrsManagerController
 			public void removeUpdate(DocumentEvent arg0)
 			{
 				SharedObjs.setDownloadPath(view.getTextPath());
-				Logger.log("CRS_MANAGER_CONTROLLER", "Path updated");
+				Logger.log(TAG, "Path updated");
 			}
 			
 			@Override
 			public void insertUpdate(DocumentEvent arg0)
 			{
 				SharedObjs.setDownloadPath(view.getTextPath());
-				Logger.log("CRS_MANAGER_CONTROLLER", "Path updated");
+				Logger.log(TAG, "Path updated");
 			}
 			
 			@Override
@@ -750,6 +750,5 @@ public class CrsManagerController
 		s = s.trim();
 		return s;
 	}
-	
 	
 }
