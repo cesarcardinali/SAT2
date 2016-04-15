@@ -13,9 +13,9 @@ import core.SharedObjs;
 @SuppressWarnings("unused")
 public class OldCRsCloser implements Runnable
 {
-	private String[]           crs;
-	private ArrayList<String>  noLabels;
-	private JiraSatApi jira;
+	private String[]          crs;
+	private ArrayList<String> noLabels;
+	private JiraSatApi        jira;
 	
 	public OldCRsCloser(String[] crs)
 	{

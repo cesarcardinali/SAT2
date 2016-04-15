@@ -2,6 +2,10 @@ package customobjects;
 
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import core.Logger;
 
 
 /**
@@ -83,24 +87,16 @@ public class CrItem
 	// Class to string
 	public String toString()
 	{
-		return "Jira: " + jiraID + " || B2gID: " + b2gID + " || Summary: " + summary + " || Build: " + build + " || Status: " + status + " || Resolution: " + resolution
-		       + " || Assignee: " + assignee + " || Product: " + product + " || Created: " + created + " || Updated: " + updated + " || Resolved: "
-		       + closureDate + " || AffectedVersions: " + affectedVersion + " || Component/s: " + component + " || Fixed at: " + fixMerges + " || Assignee: "
-		       + assignee + " || Assignee: " + assignee + " || Labels: " + labels;/* + " || Dup: " + dup + " || Description: " + description;*/
+		return "Jira: " + jiraID + " || B2gID: " + b2gID + " || Summary: " + summary + " || Build: " + build + " || Status: " + status + " || Resolution: "
+		       + resolution + " || Assignee: " + assignee + " || Product: " + product + " || Created: " + created + " || Updated: " + updated
+		       + " || Resolved: " + closureDate + " || AffectedVersions: " + affectedVersion + " || Component/s: " + component + " || Fixed at: " + fixMerges
+		       + " || Assignee: " + assignee + " || Assignee: " + assignee + " || Labels: " + labels;/* + " || Dup: " + dup + " || Description: " + description; */
 	}
 	
-	
 	/**
-	 * Compare two build strings, like "MCK24.107-12.1" to "MCK24.107-13.2"</br>
-	 * Usage:</br>
-	 * Call this method with the build you want to compare as a String.</br>
-	 * The method will compare the given build to the CR build.</br></br>
+	 * Compare two build strings, like "MCK24.107-12.1" to "MCK24.107-13.2"</br> Usage:</br> Call this method with the build you want to compare as a String.</br> The method will compare the given build to the CR build.</br></br>
 	 * @param buildComp Build string to compare to the CR build
-	 * @return Integer as:</br>
-	 * 0 - The given build is older than the CR build</br>
-	 * 1 - The given build is newer than the CR build</br>
-	 * 2 - The builds are equals</br>
-	 * -1 - Could not compare
+	 * @return Integer as:</br> 0 - The given build is older than the CR build</br> 1 - The given build is newer than the CR build</br> 2 - The builds are equals</br> -1 - Could not compare
 	 */
 	public int compareBuild(String buildComp)
 	{
@@ -120,11 +116,11 @@ public class CrItem
 			
 			bBaseVersion = Integer.parseInt(build.substring(3, build.indexOf(".")));
 			
-			if(build.indexOf("-", 5) > 0)
+			if (build.indexOf("-", 5) > 0)
 			{
 				bDerivatedBaseVersion = Integer.parseInt(build.substring(build.indexOf(".") + 1, build.indexOf("-")));
 				
-				if(build.indexOf(".", 9) > 0)
+				if (build.indexOf(".", 9) > 0)
 				{
 					bRevisionVersion = Integer.parseInt(build.substring(build.indexOf("-") + 1, build.indexOf(".", 9)));
 					bDerivatedRevisionVersion = Integer.parseInt(build.substring(build.indexOf(".", 9) + 1, build.length()));
@@ -143,7 +139,7 @@ public class CrItem
 			// Parse build for comparsion
 			String bcProp = "";
 			int bcBaseVersion = -1;
-			int bcDerivatedBaseVersion= -1;
+			int bcDerivatedBaseVersion = -1;
 			int bcRevisionVersion = 0;
 			int bcDerivatedRevisionVersion = -1;
 			
@@ -151,11 +147,11 @@ public class CrItem
 			
 			bcBaseVersion = Integer.parseInt(buildComp.substring(3, buildComp.indexOf(".")));
 			
-			if(buildComp.indexOf("-", 5) > 0)
+			if (buildComp.indexOf("-", 5) > 0)
 			{
 				bcDerivatedBaseVersion = Integer.parseInt(buildComp.substring(buildComp.indexOf(".") + 1, buildComp.indexOf("-")));
 				
-				if(buildComp.indexOf(".", 9) > 0)
+				if (buildComp.indexOf(".", 9) > 0)
 				{
 					bcRevisionVersion = Integer.parseInt(buildComp.substring(buildComp.indexOf("-") + 1, buildComp.indexOf(".", 9)));
 					bcDerivatedRevisionVersion = Integer.parseInt(buildComp.substring(buildComp.indexOf(".", 9) + 1, buildComp.length()));
@@ -171,16 +167,16 @@ public class CrItem
 				bcRevisionVersion = -1;
 			}
 			
-//			System.out.println("Builds: " + bcProp + " -> " + bProp);
-//			System.out.println("Version: " + bcBaseVersion + " -> " + bBaseVersion);
-//			System.out.println("Secondary Version: " + bcDerivatedBaseVersion + " -> " + bDerivatedBaseVersion);
-//			System.out.println("Secondary Revision: " + bcDerivatedRevisionVersion + " -> " + bDerivatedRevisionVersion);
-//			System.out.println("Revision: " + bcRevisionVersion + " -> " + bRevisionVersion);
+			// System.out.println("Builds: " + bcProp + " -> " + bProp);
+			// System.out.println("Version: " + bcBaseVersion + " -> " + bBaseVersion);
+			// System.out.println("Secondary Version: " + bcDerivatedBaseVersion + " -> " + bDerivatedBaseVersion);
+			// System.out.println("Secondary Revision: " + bcDerivatedRevisionVersion + " -> " + bDerivatedRevisionVersion);
+			// System.out.println("Revision: " + bcRevisionVersion + " -> " + bRevisionVersion);
 			
 			// Compare builds
-			if(bcProp.equals(bProp))
+			if (bcProp.equals(bProp))
 			{
-				if(bcBaseVersion > bBaseVersion)
+				if (bcBaseVersion > bBaseVersion)
 				{
 					return 1;
 				}
@@ -190,7 +186,7 @@ public class CrItem
 				}
 				else
 				{
-					if(bcDerivatedBaseVersion > bDerivatedBaseVersion)
+					if (bcDerivatedBaseVersion > bDerivatedBaseVersion)
 					{
 						return 1;
 					}
@@ -200,7 +196,7 @@ public class CrItem
 					}
 					else
 					{
-						if(bcRevisionVersion > bRevisionVersion)
+						if (bcRevisionVersion > bRevisionVersion)
 						{
 							return 1;
 						}
@@ -210,7 +206,7 @@ public class CrItem
 						}
 						else
 						{
-							if(bcDerivatedRevisionVersion > bDerivatedRevisionVersion)
+							if (bcDerivatedRevisionVersion > bDerivatedRevisionVersion)
 							{
 								return 1;
 							}
@@ -228,7 +224,7 @@ public class CrItem
 			}
 		}
 		
-		return -1; //Comparsion error - Builds from different branch(prop)
+		return -1; // Comparsion error - Builds from different branch(prop)
 	}
 	
 	// Getters and Setters
@@ -376,13 +372,49 @@ public class CrItem
 	public void setAffectedVersion(String affectedVersion)
 	{
 		this.affectedVersion = affectedVersion;
-		// lux_verizon-userdebug 6.0.1 MCD24.107-48 452 intcfg,test-keys
-		String slices[] = affectedVersion.split(" ");
-
-		if(slices.length > 1)
-			build = slices[2];
+		
+		if (affectedVersion.contains("userdebug"))
+		{
+			// lux_verizon-userdebug 6.0.1 MCD24.107-48 452 intcfg,test-keys
+			String slices[] = affectedVersion.split(" ");
+			
+			if (slices.length > 1)
+				build = slices[2];
+			else
+				build = slices[0];
+		}
+		else if (!affectedVersion.toLowerCase().contains("not yet"))
+		{
+			// MCD24.107-48
+			build = affectedVersion;
+		}
 		else
-			build = slices[0];
+		{
+			// Try to extract build from description
+			if (description.contains("This CR was automatically opened by the battery detectors julp tool"))
+			{
+				Pattern pat = Pattern.compile(".*AP Version:.*(\\w\\w\\w\\d\\d\\.\\d\\d\\d?-?\\d?\\d?\\d?\\.?\\d?\\d?).*");
+				Matcher matcher = null;
+				
+				// Detect current status
+				matcher = pat.matcher(description.replace("\r", "").replace("\n", ""));
+				if (matcher.matches())
+				{
+					build = matcher.group(1);
+					Logger.log("CR_ITEM", "Build extracted from description: " + build);
+				}
+				else
+				{
+					Logger.log("CR_ITEM", "Could not extracte build from description: " + build);
+				}
+			}
+			else
+			{
+				build = "";
+			}
+		}
+		
+		Logger.log("CR_ITEM", "------------------------- Build detected: " + build);
 	}
 	
 	public String getComponent()
@@ -414,12 +446,12 @@ public class CrItem
 	{
 		this.fixMerges = fixMerges;
 	}
-
+	
 	public String getBuild()
 	{
 		return build;
 	}
-
+	
 	public void setBuild(String build)
 	{
 		this.build = build;

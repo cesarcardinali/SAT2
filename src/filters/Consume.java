@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.concurrent.Semaphore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,19 +23,28 @@ import customobjects.HighConsume_List;
  */
 public class Consume
 {
-	private static HighConsume_List hcList;          // List of apps detected
-	private static String           result;          // Final result
-	private static int              totalOccurrences; // Total occurrences of lines about app consumption
-	private static boolean          enabled = true;  // If result is edited by the user
-	                                                  
+	private static HighConsume_List hcList;                    // List of apps detected
+	private static String           result;                    // Final result
+	private static int              totalOccurrences;          // Total occurrences of lines about app consumption
+	private static boolean          enabled = true;            // If result is edited by the user
+	private static Semaphore        se      = new Semaphore(1);
+	
 	/*
-	 * Logger.log(Logger.TAG_CONSUME, "Month:\t\t" + matcher.group(1)); Logger.log(Logger.TAG_CONSUME, "Day:\t\t" + matcher.group(2));
-	 * Logger.log(Logger.TAG_CONSUME, "Hour:\t\t" + matcher.group(3)); Logger.log(Logger.TAG_CONSUME, "Minute:\t\t" + matcher.group(4));
-	 * Logger.log(Logger.TAG_CONSUME, "Seconds:\t" + matcher.group(5)); Logger.log(Logger.TAG_CONSUME, "Consume:\t" + matcher.group(6));
-	 * Logger.log(Logger.TAG_CONSUME, "PID:\t\t" + matcher.group(7)); Logger.log(Logger.TAG_CONSUME, "Process:\t" + matcher.group(8));
+	 * Logger.log(Logger.TAG_CONSUME, "Month:\t\t" + matcher.group(1)); Logger.log(Logger.TAG_CONSUME, "Day:\t\t" + matcher.group(2)); Logger.log(Logger.TAG_CONSUME, "Hour:\t\t" + matcher.group(3)); Logger.log(Logger.TAG_CONSUME, "Minute:\t\t" +
+	 * matcher.group(4)); Logger.log(Logger.TAG_CONSUME, "Seconds:\t" + matcher.group(5)); Logger.log(Logger.TAG_CONSUME, "Consume:\t" + matcher.group(6)); Logger.log(Logger.TAG_CONSUME, "PID:\t\t" + matcher.group(7)); Logger.log(Logger.TAG_CONSUME,
+	 * "Process:\t" + matcher.group(8));
 	 */
 	public static String makelog(String path)
 	{
+		try
+		{
+			se.acquire();
+		}
+		catch (InterruptedException e1)
+		{
+			e1.printStackTrace();
+		}
+		
 		result = "- *The following processes are consuming too much CPU and draining battery:*\n";
 		totalOccurrences = 0;
 		BufferedReader reader = null; // File reader
@@ -66,6 +76,7 @@ public class Consume
 			if (!folder.isDirectory())
 			{
 				result = "Not a directory";
+				se.release();
 				return result;
 			}
 			
@@ -220,12 +231,14 @@ public class Consume
 		{
 			result = "FileNotFoundException\n" + Throwables.getStackTraceAsString(e);
 			e.printStackTrace();
+			se.release();
 			return result;
 		}
 		catch (IOException e)
 		{
 			result = "FileNotFoundException\n" + Throwables.getStackTraceAsString(e);
 			e.printStackTrace();
+			se.release();
 			return result;
 		}
 		finally
@@ -241,6 +254,7 @@ public class Consume
 			}
 		}
 		
+		se.release();
 		return result;
 	}
 	

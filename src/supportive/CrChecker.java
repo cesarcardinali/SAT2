@@ -1228,19 +1228,26 @@ public class CrChecker
 								continue;
 							// ------
 							
+							// BATTRIAGE-249
+							if (javaWkls.get(i).getTagName().length() > 110 || javaWkls.get(i).getTagName().split(" ").length >= 2)
+								continue;
+							// ------
+							
 							if (javaWkls.get(i).getDuration() > 60 * 60 * 1000 && pmsw.getDuration() > 0.5 * bugrepParser.getTimeOnBat()
 							    && javaWkls.get(i).getDuration() > 0.8 * pmsw.getDuration())
 							{
 								BugRepJavaWL wl = javaWkls.get(i);
 								
 								if (wl.getTagName().contains("*sync*/gmail-ls/com.google")
-								    || wl.getTagName().contains("*sync*/com.motorola.email.exchange.push/com.android.exchange/"))
+											    || wl.getTagName().contains("*sync*/com.motorola.email.exchange.push/com.android.exchange/")
+											    || wl.getTagName().contains("*sync*/com.yahoo.mobile.client.android.mail"))
 								{
 									wl.setTagName(wl.getTagName().substring(0, wl.getTagName().lastIndexOf("/")));
 								}
 								
 								String project = "IKSW";
-								if (cr.getBuild().equals(""))
+								System.out.println("------------ BUILD ----------------\n" + cr.getBuild() + "\n--------------------------------------");
+								if (cr.getBuild().equals("") || cr.getBuild().toLowerCase().contains("analysed"))
 								{
 									project += "M";
 								}

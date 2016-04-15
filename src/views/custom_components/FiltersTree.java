@@ -220,58 +220,61 @@ public class FiltersTree extends JTree
 		x = ("Alarms - Running");
 		selectedNode.setUserObject(x);
 		updateResultTreeUI();
+		String crPatch = new String(SharedObjs.getCrPath());
 		alarmResult = Alarm.makelog(SharedObjs.getCrPath());
 		
-		if (alarmResult.contains("FileNotFoundException"))
+		if (crPatch.equals(SharedObjs.getCrPath()))
 		{
-			x = ("Alarms - Error");
-			selectedNode.setUserObject(x);
-			addAlarms("System log not found");
-			updateResultTreeUI();
-		}
-		else if (alarmResult.contains("IOException"))
-		{
-			x = ("Alarms - Error");
-			selectedNode.setUserObject(x);
-			addAlarms("IOException");
-			updateResultTreeUI();
-		}
-		else if (alarmResult.contains("Error"))
-		{
-			x = ("Alarms - Error");
-			selectedNode.setUserObject(x);
-			addAlarms("IOException");
-			updateResultTreeUI();
-		}
-		else if (alarmResult.contains("Not a directory"))
-		{
-			x = ("Alarms - Error");
-			selectedNode.setUserObject(x);
-			addAlarms("No directory selected");
-			updateResultTreeUI();
-		}
-		else
-		{
-			if (Alarm.getListSize() == 0)
-				addAlarms("Nothing found in the logs");
+			if (alarmResult.contains("FileNotFoundException"))
+			{
+				x = ("Alarms - Error");
+				selectedNode.setUserObject(x);
+				addAlarms("System log not found");
+				updateResultTreeUI();
+			}
+			else if (alarmResult.contains("IOException"))
+			{
+				x = ("Alarms - Error");
+				selectedNode.setUserObject(x);
+				addAlarms("IOException");
+				updateResultTreeUI();
+			}
+			else if (alarmResult.contains("Error"))
+			{
+				x = ("Alarms - Error");
+				selectedNode.setUserObject(x);
+				addAlarms("IOException");
+				updateResultTreeUI();
+			}
+			else if (alarmResult.contains("Not a directory"))
+			{
+				x = ("Alarms - Error");
+				selectedNode.setUserObject(x);
+				addAlarms("No directory selected");
+				updateResultTreeUI();
+			}
 			else
-				for (int i = 0; i < Alarm.getListSize(); i++)
-				{
-					addAlarms(Alarm.getList().get(i).getProcess());
-					Logger.log(Logger.TAG_FILTERSRESULTSTREE, Alarm.getList().get(i).getProcess());
-				}
+			{
+				if (Alarm.getListSize() == 0)
+					addAlarms("Nothing found in the logs");
+				else
+					for (int i = 0; i < Alarm.getListSize(); i++)
+					{
+						addAlarms(Alarm.getList().get(i).getProcess());
+						Logger.log(Logger.TAG_FILTERSRESULTSTREE, Alarm.getList().get(i).getProcess());
+					}
+				
+				SharedObjs.setResult(SharedObjs.getResult() + "\n\n\n======================= Alarms Resume =======================\n" + alarmResult);
+				x = ("Alarms - Done");
+				selectedNode.setUserObject(x);
+			}
 			
-			SharedObjs.setResult(SharedObjs.getResult() + "\n\n\n======================= Alarms Resume =======================\n" + alarmResult);
-			x = ("Alarms - Done");
-			selectedNode.setUserObject(x);
+			Logger.log(Logger.TAG_FILTERSRESULTSTREE, "Alarms thread finished");
+			updateResultTreeUI();
+			// expandPath(new TreePath(selectedNode.getPath()));
+			
+			showResultOnTextPane(selectedNode);
 		}
-		
-		Logger.log(Logger.TAG_FILTERSRESULTSTREE, "Alarms thread finished");
-		updateResultTreeUI();
-		// expandPath(new TreePath(selectedNode.getPath()));
-		
-		showResultOnTextPane(selectedNode);
-		
 	}
 	
 	public void bug2goThread(DefaultMutableTreeNode selectedNode)

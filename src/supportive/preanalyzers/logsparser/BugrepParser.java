@@ -150,7 +150,7 @@ public class BugrepParser
 				Pattern ptDischScOff = Pattern.compile("Amount discharged while screen off: (\\d+)");
 				Pattern ptBatCap = Pattern.compile("Capacity: (\\d+), Computed drain");
 				Pattern ptKernelWL = Pattern.compile("Kernel Wake lock (.+): (.+) \\((.+) times\\)");
-				Pattern ptJavaWL = Pattern.compile("Wake lock (.+\\d) (.+): (.+) \\((.+) times\\)");
+				Pattern ptJavaWL = Pattern.compile("Wake lock (...\\d\\d?\\d?) (.+): (.+) \\((.+) times\\)");
 				
 				Matcher matcher;
 				
@@ -484,7 +484,7 @@ public class BugrepParser
 								try
 								{
 									javaWLs.add(new BugRepJavaWL(matcher.group(1),
-									                             matcher.group(2),
+									                             matcher.group(2).replaceAll("\\{|\\}", ""),
 									                             matcher.group(3),
 									                             matcher.group(4)));
 									System.out.println("34 ptJavaWL " + javaWLs.get(javaWLs.size() - 1));
