@@ -6,10 +6,17 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
+import javax.swing.SwingUtilities;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.UndoManager;
 
+import models.ParserModel;
 import views.ParserPane;
 import core.Logger;
 import core.SharedObjs;
@@ -29,26 +36,32 @@ public class ParserController
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Variables ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	private ParserPane  view;
-	private KeyListener resultTxtPaneKeyListener;
+	private ParserPane           view;
+	private ParserModel          model;
+	private KeyListener          resultTxtPaneKeyListener;
+	private UndoManager          undoManager;
+	private UndoableEditListener undoableEditListener;
+	private MouseAdapter         mouseListener;
 	
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Controller initializer ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	public void startController(ParserPane view)
+	public void startController(ParserPane view, ParserModel model)
 	{
-		// Setup the view
+		// Set the view/model
 		this.view = view;
+		this.setModel(model);
 		
 		// Setup controller
-		initVariables();
-		setupViewEvents();
+		configureVariables();
+		setupViewActionListeners();
+		initializeViewItens();
 	}
 	
-	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	// Controller setup methods -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	private void initVariables()
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Initialize controller variables ---------------------------------------------------------------------------------------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	private void configureVariables()
 	{
 		resultTxtPaneKeyListener = new KeyListener()
 		{
@@ -75,7 +88,7 @@ public class ParserController
 				{
 					try
 					{
-						view.undo();
+						undo();
 					}
 					catch (CannotRedoException cre)
 					{
@@ -85,18 +98,81 @@ public class ParserController
 			}
 		};
 		
+		undoManager = new UndoManager();
+		
+		undoableEditListener = new UndoableEditListener()
+		{
+			@Override
+			public void undoableEditHappened(UndoableEditEvent e)
+			{
+				undoManager.addEdit(e.getEdit());
+			}
+		};
+		
+		mouseListener = new MouseAdapter()
+		{
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+				if (SwingUtilities.isRightMouseButton(e))
+				{
+					// TODO Popup menu with options select all, copy and paste
+				}
+			}
+		};
 	}
 	
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// View actions setup -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	private void setupViewEvents()
+	private void setupViewActionListeners()
 	{
-		view.setResultTextPaneKeyListener(resultTxtPaneKeyListener);
+		view.resultTextPaneAddKeyListener(resultTxtPaneKeyListener);
+		
+		view.resultTxtPaneAddUndoableEditListener(undoableEditListener);
+		
+		view.resultTxtPaneAddMouseListener(mouseListener);
+	}
+	
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// View itens initialization ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	private void initializeViewItens()
+	{
+		SharedObjs.setResult("");
+		view.setResultsTxtPaneText("");
+	}
+	
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Actions definition ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// View manipulation methods ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	public void clearPane()
+	{
+		view.getFiltersTree().clearTree();
+		view.setResultsTxtPaneText(""); // reset the text pane
+		SharedObjs.setResult(""); // reset the result for the filters
+	}
+	
+	public void showAllLogResults()
+	{
+		while (SharedObjs.getResult().charAt(0) == '\n')
+		{
+			SharedObjs.setResult(SharedObjs.getResult().substring(1));
+		}
+		view.setResultsTxtPaneText(SharedObjs.getResult());
+	}
+	
+	public void undo()
+	{
+		undoManager.undo();
 	}
 	
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	// Methods ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Supportive Methods -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	private void copyAll()
 	{
@@ -111,19 +187,33 @@ public class ParserController
 		String selectedNodeParent = ((DefaultMutableTreeNode) node).getParent().toString().toLowerCase();
 		
 		if ((selectedNode.contains("colors") && selectedNodeParent.contains("alarms ")) || selectedNode.contains("alarms "))
+		{
 			Alarm.updateResult(text);
+		}
 		if ((selectedNode.contains("colors") && selectedNodeParent.contains(" consum")) || selectedNode.contains(" consum"))
+		{
 			Consume.updateResult(text);
+		}
 		if (selectedNode.contains("diag ") || selectedNodeParent.contains("diag "))
+		{
 			Diag.updateResult(text);
+		}
 		if (selectedNode.contains("suspicious"))
+		{
 			Suspicious.updateResult(text);
+		}
 		if (selectedNode.contains("tether") || selectedNodeParent.contains("tether"))
+		{
 			Tether.updateResult(text);
+		}
 		if (selectedNode.contains("summary") || selectedNodeParent.contains("summary"))
+		{
 			Normal.updateResult(text);
+		}
 		if (selectedNode.contains(" issues") || selectedNodeParent.contains(" issues"))
+		{
 			Issue.updateResult(text);
+		}
 		if (selectedNode.contains("bug2go") || selectedNodeParent.contains("bug2go"))
 		{
 			B2G.updateResult(text);
@@ -131,14 +221,32 @@ public class ParserController
 		}
 	}
 	
-	public void savePaneData()
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// UI data load/save -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	public void saveUIData()
 	{
 		XmlMngr.setUserValueOf(new String[] {"parser_pane", "rootPath"}, SharedObjs.getRootFolderPath());
 		
 		Logger.log(Logger.TAG_PARSER, "Parser data saved");
 	}
 	
-	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	// Getters and Setters ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	public void loadUIData()
+	{
+		
+	}
+	
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Getters/Setters -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	public ParserModel getModel()
+	{
+		return model;
+	}
+	
+	public void setModel(ParserModel model)
+	{
+		this.model = model;
+	}
+	
 }

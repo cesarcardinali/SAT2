@@ -244,80 +244,7 @@ public class CrsManagerController
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	private void initializeViewItens()
 	{
-		loadViewData();
-	}
-	
-	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	// UI data load/save -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	public void saveUIData()
-	{
-		String xmlPath[] = new String[] {"crs_jira_pane", ""};
-		
-		xmlPath[1] = "path";
-		XmlMngr.setUserValueOf(xmlPath, view.getTextPath());
-		xmlPath[1] = "assign";
-		XmlMngr.setUserValueOf(xmlPath, view.isChckbxAssignSelected() + "");
-		xmlPath[1] = "unassign";
-		XmlMngr.setUserValueOf(xmlPath, view.isChckbxUnassignSelected() + "");
-		xmlPath[1] = "label";
-		XmlMngr.setUserValueOf(xmlPath, view.isChckbxLabelsSelected() + "");
-		xmlPath[1] = "rem_label";
-		XmlMngr.setUserValueOf(xmlPath, view.isChckbxRemLabelsSelected() + "");
-		xmlPath[1] = "labels";
-		XmlMngr.setUserValueOf(xmlPath, view.getTextLabels());
-		xmlPath[1] = "download";
-		XmlMngr.setUserValueOf(xmlPath, view.isChckbxDownloadSelected() + "");
-		xmlPath[1] = "unzip";
-		XmlMngr.setUserValueOf(xmlPath, view.isChckbxUnzipSelected() + "");
-		xmlPath[1] = "analyze";
-		XmlMngr.setUserValueOf(xmlPath, view.isChckbxAnalyzeSelected() + "");
-		xmlPath[1] = "close";
-		XmlMngr.setUserValueOf(xmlPath, view.isChckbxCloseAsOldSelected() + "");
-		xmlPath[1] = "ignore";
-		XmlMngr.setUserValueOf(xmlPath, view.isChckbxIgnoreAnalyzedSelected() + "");
-		
-		Logger.log(Logger.TAG_CRSMANAGER, "CrsManagerPane data saved");
-	}
-	
-	private void loadViewData()
-	{
-		String xmlPath[] = new String[] {"crs_jira_pane", ""};
-		
-		xmlPath[1] = "path";
-		view.setTextPath(XmlMngr.getUserValueOf(xmlPath));
-		SharedObjs.setDownloadPath(view.getTextPath());
-		
-		xmlPath[1] = "assign";
-		view.setChckbxAssignSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		xmlPath[1] = "unassign";
-		view.setChckbxUnassignSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		
-		xmlPath[1] = "label";
-		view.setChckbxLabelsSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		xmlPath[1] = "rem_label";
-		view.setChckbxRemLabelsSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		
-		xmlPath[1] = "labels";
-		view.setTextLabels(XmlMngr.getUserValueOf(xmlPath));
-		
-		xmlPath[1] = "download";
-		view.setChckbxDownloadSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		System.out.println("" + Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		
-		xmlPath[1] = "unzip";
-		view.setChckbxUnzipSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		
-		xmlPath[1] = "analyze";
-		view.setChckbxAnalyzeSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		
-		xmlPath[1] = "close";
-		view.setChckbxCloseAsOldSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		
-		xmlPath[1] = "ignore";
-		view.setChckbxIgnoreAnalyzedSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
-		
-		Logger.log(Logger.TAG_CRSMANAGER, "CrsManagerPane variables Loaded");
+		loadUIData();
 	}
 	
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -601,6 +528,79 @@ public class CrsManagerController
 		view.setChckbxLabelsEnabled(true);
 		view.setChckbxRemLabelsEnabled(true);
 		view.setChckbxUnassignEnabled(true);
+	}
+	
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// UI data load/save -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	public void saveUIData()
+	{
+		String xmlPath[] = new String[] {"crs_jira_pane", ""};
+		
+		xmlPath[1] = "path";
+		XmlMngr.setUserValueOf(xmlPath, view.getTextPath());
+		xmlPath[1] = "assign";
+		XmlMngr.setUserValueOf(xmlPath, view.isChckbxAssignSelected() + "");
+		xmlPath[1] = "unassign";
+		XmlMngr.setUserValueOf(xmlPath, view.isChckbxUnassignSelected() + "");
+		xmlPath[1] = "label";
+		XmlMngr.setUserValueOf(xmlPath, view.isChckbxLabelsSelected() + "");
+		xmlPath[1] = "rem_label";
+		XmlMngr.setUserValueOf(xmlPath, view.isChckbxRemLabelsSelected() + "");
+		xmlPath[1] = "labels";
+		XmlMngr.setUserValueOf(xmlPath, view.getTextLabels());
+		xmlPath[1] = "download";
+		XmlMngr.setUserValueOf(xmlPath, view.isChckbxDownloadSelected() + "");
+		xmlPath[1] = "unzip";
+		XmlMngr.setUserValueOf(xmlPath, view.isChckbxUnzipSelected() + "");
+		xmlPath[1] = "analyze";
+		XmlMngr.setUserValueOf(xmlPath, view.isChckbxAnalyzeSelected() + "");
+		xmlPath[1] = "close";
+		XmlMngr.setUserValueOf(xmlPath, view.isChckbxCloseAsOldSelected() + "");
+		xmlPath[1] = "ignore";
+		XmlMngr.setUserValueOf(xmlPath, view.isChckbxIgnoreAnalyzedSelected() + "");
+		
+		Logger.log(Logger.TAG_CRSMANAGER, "CrsManagerPane data saved");
+	}
+	
+	private void loadUIData()
+	{
+		String xmlPath[] = new String[] {"crs_jira_pane", ""};
+		
+		xmlPath[1] = "path";
+		view.setTextPath(XmlMngr.getUserValueOf(xmlPath));
+		SharedObjs.setDownloadPath(view.getTextPath());
+		
+		xmlPath[1] = "assign";
+		view.setChckbxAssignSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
+		xmlPath[1] = "unassign";
+		view.setChckbxUnassignSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
+		
+		xmlPath[1] = "label";
+		view.setChckbxLabelsSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
+		xmlPath[1] = "rem_label";
+		view.setChckbxRemLabelsSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
+		
+		xmlPath[1] = "labels";
+		view.setTextLabels(XmlMngr.getUserValueOf(xmlPath));
+		
+		xmlPath[1] = "download";
+		view.setChckbxDownloadSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
+		System.out.println("" + Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
+		
+		xmlPath[1] = "unzip";
+		view.setChckbxUnzipSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
+		
+		xmlPath[1] = "analyze";
+		view.setChckbxAnalyzeSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
+		
+		xmlPath[1] = "close";
+		view.setChckbxCloseAsOldSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
+		
+		xmlPath[1] = "ignore";
+		view.setChckbxIgnoreAnalyzedSelected(Boolean.parseBoolean(XmlMngr.getUserValueOf(xmlPath)));
+		
+		Logger.log(Logger.TAG_CRSMANAGER, "CrsManagerPane variables Loaded");
 	}
 	
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

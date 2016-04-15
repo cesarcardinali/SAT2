@@ -29,6 +29,8 @@ import javax.swing.event.ChangeListener;
 
 import main.SAT2;
 import models.CrsManagerModel;
+import models.OptionsModel;
+import models.ParserModel;
 
 import org.apache.commons.io.FileUtils;
 
@@ -53,10 +55,18 @@ import customobjects.CustomFiltersList;
  */
 public class SharedObjs
 {
-	/**
-	 * Variables
-	 */
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Variables -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Paths
 	public static final String         contentFolder  = "Data/";
+	private static String              crPath;
+	private static String              rootFolderPath;
+	private static String              downloadPath;
+	public static String               updateFolder1;
+	public static String               updateFolder2;
+	
+	// IO Files
 	public static final File           sytemCfgFile   = new File(contentFolder + "cfgs/system_cfg.xml");
 	public static final File           userCfgFile    = new File(contentFolder + "cfgs/user_cfg.xml");
 	public static final File           messageCfgFile = new File(contentFolder + "cfgs/message.xml");
@@ -64,26 +74,32 @@ public class SharedObjs
 	public static final File           uidsFile       = new File(contentFolder + "cfgs/uids.xml");
 	public static final File           reportFile     = new File(contentFolder + "complements/report/report_cfg.xml");
 	public static final File           pwdFile        = new File(contentFolder + "cfgs/pass.pwd");
-	private static String              crPath;
-	private static String              rootFolderPath;
-	private static String              downloadPath;
-	private static String              result;
+	
+	// User
 	private static String              user;
 	private static String              pass;
-	public static String               updateFolder1;
-	public static String               updateFolder2;
-	private static CrItemsList         crsList;
+	
+	// Parser data
+	private static String              actualParserResultText;
+	
+	// Semaphore Control
 	private static Semaphore           unzipSemaphore;
+	
+	// Filters
 	private static CustomFiltersList   userFiltersList;
 	private static CustomFiltersList   sharedFiltersList;
 	private static CustomFiltersList   activeFiltersList;
 	private static CustomFiltersPane   customFiltersPane;
+	
+	// DB
 	public static DBAdapter            satDB;
 	public static boolean              dbStatus;
+	
+	private static CrItemsList         crsList;
 	private static ParallelTextPopup   closedList;
 	private static ParallelTextPopup   openedList;
 	
-	//Views
+	// Views
 	public static JTabbedPane          tabbedPane;
 	public static ParserPane           parserPane;
 	public static CrsManagerPane       crsManagerPane;
@@ -97,18 +113,17 @@ public class SharedObjs
 	public static OptionsController    optionsController;
 	
 	// Models
-	public static CrsManagerModel crsManagerModel;
+	public static CrsManagerModel      crsManagerModel;
+	public static ParserModel          parserModel;
+	public static OptionsModel         optionsModel;
 	
-	/*
-	 * Fixed parameters:
-	 */
 	// Thresholds for issue detectors:
 	public static long                 threshold;
 	public static boolean              isUidsDBModified;
 	
-	/**
-	 * Initialize class variables
-	 */
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Model Initializer --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static void initClass()
 	{
 		// Set UI theme
@@ -166,8 +181,9 @@ public class SharedObjs
 		
 		// Create Panes
 		parserPane = new ParserPane();
+		parserModel = new ParserModel();
 		parserController = new ParserController();
-		parserController.startController(parserPane);
+		parserController.startController(parserPane, parserModel);
 		
 		crsManagerPane = new CrsManagerPane();
 		crsManagerModel = new CrsManagerModel();
@@ -175,8 +191,9 @@ public class SharedObjs
 		crsManagerController.startController(crsManagerPane, crsManagerModel);
 		
 		optionsPane = new OptionsPane();
+		optionsModel = new OptionsModel();
 		optionsController = new OptionsController();
-		optionsController.startController(optionsPane);
+		optionsController.startController(optionsPane, optionsModel);
 		
 		advOptions = new AdvancedOptionsPane();
 		
@@ -199,7 +216,7 @@ public class SharedObjs
 		
 		// Load filters and update tree
 		loadFilters();
-		parserPane.getFiltersResultsTree().updateFiltersTree();
+		parserPane.getFiltersTree().updateFiltersTree();
 		optionsPane.setServerStatus(dbStatus);
 		
 		//
@@ -218,6 +235,9 @@ public class SharedObjs
 		// TODO
 	}
 	
+	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Filters methods ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	private static void loadFilters()
 	{
 		Logger.log(Logger.TAG_SHAREDOBJS, "Loading filters");
@@ -227,9 +247,6 @@ public class SharedObjs
 		Logger.log(Logger.TAG_SHAREDOBJS, "Filters loaded");
 	}
 	
-	/**
-	 * @return
-	 */
 	private static void checkMyFilters()
 	{
 		boolean synced = false;
@@ -340,9 +357,6 @@ public class SharedObjs
 		Logger.log(Logger.TAG_SHAREDOBJS, "User filters loaded: " + userFiltersList.size());
 	}
 	
-	/**
-	 * @return
-	 */
 	public static void checkSharedFilters()
 	{
 		if (satDB != null)
@@ -363,9 +377,6 @@ public class SharedObjs
 		Logger.log(Logger.TAG_SHAREDOBJS, "Shared filters loaded: " + sharedFiltersList.size());
 	}
 	
-	/**
-	 * @return
-	 */
 	public static void checkActiveSharedFilters()
 	{
 		if (satDB != null)
@@ -401,148 +412,9 @@ public class SharedObjs
 		Logger.log(Logger.TAG_SHAREDOBJS, "Active filters loaded: " + activeFiltersList.size());
 	}
 	
-	// Getters:
-	public static String getUser()
-	{
-		return user;
-	}
-	
-	public static String getPass()
-	{
-		return pass;
-	}
-	
-	public static String getCrPath()
-	{
-		return crPath;
-	}
-	
-	public static String getResult()
-	{
-		return result;
-	}
-	
-	public static String getDownloadPath()
-	{
-		return downloadPath;
-	}
-	
-	public static CustomFiltersList getUserFiltersList()
-	{
-		return userFiltersList;
-	}
-	
-	public static CustomFiltersList getSharedFiltersList()
-	{
-		return sharedFiltersList;
-	}
-	
-	public static CustomFiltersList getActiveFiltersList()
-	{
-		return activeFiltersList;
-	}
-	
-	public static CustomFiltersPane getCustomFiltersPane()
-	{
-		return customFiltersPane;
-	}
-	
-	public static CrItemsList getCrsList()
-	{
-		return crsList;
-	}
-	
-	public static CrItem getCrByJira(String jiraID)
-	{
-		for (CrItem aux : crsList)
-		{
-			if (aux.getJiraID().equals(jiraID))
-			{
-				return aux;
-			}
-		}
-		return null;
-	}
-	
-	public static CrItem getCrByB2g(String b2gID)
-	{
-		for (CrItem aux : crsList)
-		{
-			if (aux.getJiraID().equals(b2gID))
-			{
-				return aux;
-			}
-		}
-		return null;
-	}
-	
-	public static String getRootFolderPath()
-	{
-		return rootFolderPath;
-	}
-	
-	// Setters:
-	public static void setUser(String newuser)
-	{
-		user = newuser;
-	}
-	
-	public static void setPass(String pass)
-	{
-		SharedObjs.pass = pass;
-	}
-	
-	public static void setResult(String result)
-	{
-		SharedObjs.result = result;
-	}
-	
-	public static void setCrPath(String crPath)
-	{
-		SharedObjs.crPath = crPath;
-	}
-	
-	public static void setCrsList(CrItemsList crsList)
-	{
-		SharedObjs.crsList = crsList;
-	}
-	
-	public static void addCrToList(CrItem cr)
-	{
-		crsList.add(cr);
-	}
-	
-	public void setCustomFiltersList(CustomFiltersList customFiltersList)
-	{
-		SharedObjs.userFiltersList = customFiltersList;
-	}
-	
-	public static void setSharedFiltersList(CustomFiltersList sharedFiltersList)
-	{
-		SharedObjs.sharedFiltersList = sharedFiltersList;
-	}
-	
-	public static void setActiveFiltersList(CustomFiltersList activeFiltersList)
-	{
-		SharedObjs.activeFiltersList = activeFiltersList;
-	}
-	
-	public void setCustomFiltersPane(CustomFiltersPane customFiltersPane)
-	{
-		SharedObjs.customFiltersPane = customFiltersPane;
-	}
-	
-	public static void setRootFolderPath(String rootFolderPath)
-	{
-		SharedObjs.rootFolderPath = rootFolderPath;
-	}
-	
-	public static void setDownloadPath(String downloadPath)
-	{
-		SharedObjs.downloadPath = downloadPath;
-	}
-	
-	// General Methods
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Supportive Methods -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static void copyScript(File source, File dest) throws IOException
 	{
 		FileUtils.copyFile(source, dest);
@@ -748,7 +620,7 @@ public class SharedObjs
 		
 		addLogLine("Report output generated for " + f.getName());
 	}
-
+	
 	public static void addLogLine(String line)
 	{
 		if (crsManagerPane.getTextLog().split("\n").length > 150)
@@ -821,5 +693,150 @@ public class SharedObjs
 			
 			Logger.log(Logger.TAG_SHAREDOBJS, "Update completed");
 		}
+	}
+	
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Getters ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	public static String getUser()
+	{
+		return user;
+	}
+	
+	public static String getPass()
+	{
+		return pass;
+	}
+	
+	public static String getCrPath()
+	{
+		return crPath;
+	}
+	
+	public static String getResult()
+	{
+		return actualParserResultText;
+	}
+	
+	public static String getDownloadPath()
+	{
+		return downloadPath;
+	}
+	
+	public static CustomFiltersList getUserFiltersList()
+	{
+		return userFiltersList;
+	}
+	
+	public static CustomFiltersList getSharedFiltersList()
+	{
+		return sharedFiltersList;
+	}
+	
+	public static CustomFiltersList getActiveFiltersList()
+	{
+		return activeFiltersList;
+	}
+	
+	public static CustomFiltersPane getCustomFiltersPane()
+	{
+		return customFiltersPane;
+	}
+	
+	public static CrItemsList getCrsList()
+	{
+		return crsList;
+	}
+	
+	public static CrItem getCrByJira(String jiraID)
+	{
+		for (CrItem aux : crsList)
+		{
+			if (aux.getJiraID().equals(jiraID))
+			{
+				return aux;
+			}
+		}
+		return null;
+	}
+	
+	public static CrItem getCrByB2g(String b2gID)
+	{
+		for (CrItem aux : crsList)
+		{
+			if (aux.getJiraID().equals(b2gID))
+			{
+				return aux;
+			}
+		}
+		return null;
+	}
+	
+	public static String getRootFolderPath()
+	{
+		return rootFolderPath;
+	}
+	
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Setters ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	public static void setUser(String newuser)
+	{
+		user = newuser;
+	}
+	
+	public static void setPass(String pass)
+	{
+		SharedObjs.pass = pass;
+	}
+	
+	public static void setResult(String result)
+	{
+		SharedObjs.actualParserResultText = result;
+	}
+	
+	public static void setCrPath(String crPath)
+	{
+		SharedObjs.crPath = crPath;
+	}
+	
+	public static void setCrsList(CrItemsList crsList)
+	{
+		SharedObjs.crsList = crsList;
+	}
+	
+	public static void addCrToList(CrItem cr)
+	{
+		crsList.add(cr);
+	}
+	
+	public void setCustomFiltersList(CustomFiltersList customFiltersList)
+	{
+		SharedObjs.userFiltersList = customFiltersList;
+	}
+	
+	public static void setSharedFiltersList(CustomFiltersList sharedFiltersList)
+	{
+		SharedObjs.sharedFiltersList = sharedFiltersList;
+	}
+	
+	public static void setActiveFiltersList(CustomFiltersList activeFiltersList)
+	{
+		SharedObjs.activeFiltersList = activeFiltersList;
+	}
+	
+	public void setCustomFiltersPane(CustomFiltersPane customFiltersPane)
+	{
+		SharedObjs.customFiltersPane = customFiltersPane;
+	}
+	
+	public static void setRootFolderPath(String rootFolderPath)
+	{
+		SharedObjs.rootFolderPath = rootFolderPath;
+	}
+	
+	public static void setDownloadPath(String downloadPath)
+	{
+		SharedObjs.downloadPath = downloadPath;
 	}
 }

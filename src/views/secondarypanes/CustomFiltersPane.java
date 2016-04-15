@@ -679,7 +679,7 @@ public class CustomFiltersPane extends JDialog
 			SharedObjs.getActiveFiltersList().addAll(XmlMngr.getAllActiveFilters());
 		}
 		
-		SharedObjs.parserPane.getFiltersResultsTree().updateFiltersTree();
+		SharedObjs.parserPane.getFiltersTree().updateFiltersTree();
 		
 		Logger.log("FiltersManager", "Filters Saved");
 	}

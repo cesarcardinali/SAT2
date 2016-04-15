@@ -20,6 +20,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 
+import models.OptionsModel;
 import supportive.Encryptation;
 import views.OptionsPane;
 import core.Logger;
@@ -33,6 +34,7 @@ public class OptionsController
 	// Variables -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	OptionsPane    view;
+	OptionsModel   model;
 	FocusListener  userDataFocusListener;
 	MouseListener  collapseExtendMouseListener;
 	ActionListener helpBtnsActionListener;
@@ -41,15 +43,14 @@ public class OptionsController
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Initialize controller -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	public void startController(OptionsPane view)
+	public void startController(OptionsPane view, OptionsModel model)
 	{
-		// Get view
+		// Set view/model
 		this.view = view;
+		this.model = model;
 		
-		// Initialize controller variables
 		configureVariables();
-		
-		// Setup view
+		setupViewActionListeners();
 		initializeViewItens();
 	}
 	
@@ -190,12 +191,12 @@ public class OptionsController
 					
 					if (tooltip.contains("Double click"))
 					{
-						SharedObjs.parserPane.getFiltersResultsTree().setToggleClickCount(2);
+						SharedObjs.parserPane.getFiltersTree().setToggleClickCount(2);
 					}
 					
 					else if (tooltip.contains("Single click"))
 					{
-						SharedObjs.parserPane.getFiltersResultsTree().setToggleClickCount(1);
+						SharedObjs.parserPane.getFiltersTree().setToggleClickCount(1);
 					}
 				}
 			}
@@ -218,9 +219,9 @@ public class OptionsController
 					if (tooltip.contains("Wrap text"))
 					{
 						if (e.getStateChange() == ItemEvent.SELECTED)
-							SharedObjs.parserPane.getResultsTxtPane().setWrapText(true);
+							SharedObjs.parserPane.setResultsTxtPaneTextWrap(true);
 						else
-							SharedObjs.parserPane.getResultsTxtPane().setWrapText(false);
+							SharedObjs.parserPane.setResultsTxtPaneTextWrap(false);
 					}
 				}
 			}
@@ -259,9 +260,6 @@ public class OptionsController
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	private void initializeViewItens()
 	{
-		Logger.log(Logger.TAG_OPTIONS, "Configuring btns and other itens actions ...");
-		setupViewActionListeners();
-		
 		Logger.log(Logger.TAG_OPTIONS, "Loading option pane values data ...");
 		loadViewUserDataTexts();
 		loadViewCommentsTexts();
@@ -327,13 +325,13 @@ public class OptionsController
 		System.out.println("-" + XmlMngr.getUserValueOf(new String[] {"option_pane", "tree_breakdown"}) + "-");
 		if (XmlMngr.getUserValueOf(new String[] {"option_pane", "tree_breakdown"}).equals("1"))
 		{
-			SharedObjs.parserPane.getFiltersResultsTree().setToggleClickCount(1);
+			SharedObjs.parserPane.getFiltersTree().setToggleClickCount(1);
 			view.setRdBtnSingleClickSelected(true);
 			view.setRdBtnSingleClickSelected(false);
 		}
 		else
 		{
-			SharedObjs.parserPane.getFiltersResultsTree().setToggleClickCount(2);
+			SharedObjs.parserPane.getFiltersTree().setToggleClickCount(2);
 			view.setRdBtnDoubleClickSelected(true);
 			view.setRdBtnSingleClickSelected(false);
 		}
@@ -362,7 +360,7 @@ public class OptionsController
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// View options saving ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	public void saveViewData()
+	public void saveUIData()
 	{
 		Logger.log(Logger.TAG_OPTIONS, "Saving options pane values ...");
 		

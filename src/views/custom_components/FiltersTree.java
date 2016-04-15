@@ -1,4 +1,4 @@
-package customobjects;
+package views.custom_components;
 
 
 import javax.swing.JTree;
@@ -12,6 +12,7 @@ import style.ColorPrinter;
 import style.LabelTreeNodeRenderer;
 import core.Logger;
 import core.SharedObjs;
+import customobjects.CustomFilterItem;
 import filters.Alarm;
 import filters.B2G;
 import filters.Consume;
@@ -25,7 +26,7 @@ import filters.Tether;
 public class FiltersTree extends JTree
 {
 	// Global Variables
-	private DefaultTreeModel	   treeModel;
+	private DefaultTreeModel       treeModel;
 	private DefaultMutableTreeNode rootNode;
 	
 	// Tree definition
@@ -260,9 +261,7 @@ public class FiltersTree extends JTree
 					Logger.log(Logger.TAG_FILTERSRESULTSTREE, Alarm.getList().get(i).getProcess());
 				}
 			
-			SharedObjs.setResult(SharedObjs.getResult()
-								 + "\n\n\n======================= Alarms Resume =======================\n"
-								 + alarmResult);
+			SharedObjs.setResult(SharedObjs.getResult() + "\n\n\n======================= Alarms Resume =======================\n" + alarmResult);
 			x = ("Alarms - Done");
 			selectedNode.setUserObject(x);
 		}
@@ -312,9 +311,7 @@ public class FiltersTree extends JTree
 		else
 		{
 			addBug2go("Result");
-			SharedObjs.setResult(SharedObjs.getResult()
-								 + "\n\n\n========================= Bug2Go =========================\n"
-								 + b2gResult);
+			SharedObjs.setResult(SharedObjs.getResult() + "\n\n\n========================= Bug2Go =========================\n" + b2gResult);
 			x = ("Bug2Go - Done");
 			selectedNode.setUserObject(x);
 			updateResultTreeUI();
@@ -370,9 +367,7 @@ public class FiltersTree extends JTree
 		else
 		{
 			addDiag("Result");
-			SharedObjs.setResult(SharedObjs.getResult()
-								 + "\n\n\n======================= Diag Wake locks =======================\n"
-								 + diagResult);
+			SharedObjs.setResult(SharedObjs.getResult() + "\n\n\n======================= Diag Wake locks =======================\n" + diagResult);
 			x = ("Diag - Done");
 			selectedNode.setUserObject(x);
 			updateResultTreeUI();
@@ -420,9 +415,7 @@ public class FiltersTree extends JTree
 		else
 		{
 			addIssues("Result");
-			SharedObjs.setResult(SharedObjs.getResult()
-								 + "\n\n\n========================= SystemPM =========================\n"
-								 + wakelocksResult);
+			SharedObjs.setResult(SharedObjs.getResult() + "\n\n\n========================= SystemPM =========================\n" + wakelocksResult);
 			x = ("WakeLocks - Done");
 			selectedNode.setUserObject(x);
 			updateResultTreeUI();
@@ -475,9 +468,8 @@ public class FiltersTree extends JTree
 			}
 			if (Consume.getHCList().size() == 0)
 				addConsumeNode("Nothing found in logs");
-			SharedObjs.setResult(SharedObjs.getResult()
-								 + "\n\n\n========================= High Consumption Apps =========================\n"
-								 + consumptionResult);
+			SharedObjs.setResult(SharedObjs.getResult() + "\n\n\n========================= High Consumption Apps =========================\n"
+			                     + consumptionResult);
 			x = ("High Consumption - Done");
 			selectedNode.setUserObject(x);
 			updateResultTreeUI();
@@ -525,9 +517,7 @@ public class FiltersTree extends JTree
 		else
 		{
 			addSummary("Result");
-			SharedObjs.setResult(SharedObjs.getResult()
-								 + "\n\n\n========================= Summary =========================\n"
-								 + summaryResult);
+			SharedObjs.setResult(SharedObjs.getResult() + "\n\n\n========================= Summary =========================\n" + summaryResult);
 			x = ("Summary - Done");
 			selectedNode.setUserObject(x);
 			updateResultTreeUI();
@@ -549,8 +539,8 @@ public class FiltersTree extends JTree
 		suspiciousResult = Suspicious.makelog(SharedObjs.getCrPath());
 		
 		// TODO Test to be removed
-//		SystemPM test = new SystemPM(SharedObjs.getCrPath());
-//		suspiciousResult = test.makelog();
+		// SystemPM test = new SystemPM(SharedObjs.getCrPath());
+		// suspiciousResult = test.makelog();
 		
 		if (suspiciousResult.contains("FileNotFoundException"))
 		{
@@ -581,17 +571,14 @@ public class FiltersTree extends JTree
 			if (Suspicious.getWakeLocks().size() != 0)
 				for (int i = 0; i < Suspicious.getWakeLocks().size(); i++)
 				{
-					addWakeLocksNode(Suspicious.getWakeLocks().get(i).getProcess() + " - "
-									 + Suspicious.getWakeLocks().get(i).getTag() + " - "
-									 + Suspicious.getWakeLocks().get(i).getDuration());
+					addWakeLocksNode(Suspicious.getWakeLocks().get(i).getProcess() + " - " + Suspicious.getWakeLocks().get(i).getTag() + " - "
+					                 + Suspicious.getWakeLocks().get(i).getDuration());
 				}
 			else
 			{
 				addWakeLocksNode("No suspicious found");
 			}
-			SharedObjs.setResult(SharedObjs.getResult()
-								 + "\n\n\n========================= Suspicious =========================\n"
-								 + suspiciousResult);
+			SharedObjs.setResult(SharedObjs.getResult() + "\n\n\n========================= Suspicious =========================\n" + suspiciousResult);
 			x = ("Suspicious - Done");
 			selectedNode.setUserObject(x);
 			updateResultTreeUI();
@@ -639,9 +626,7 @@ public class FiltersTree extends JTree
 		else
 		{
 			addTether("Result");
-			SharedObjs.setResult(SharedObjs.getResult()
-								 + "\n\n\n========================= Tethering =========================\n"
-								 + tetherResult);
+			SharedObjs.setResult(SharedObjs.getResult() + "\n\n\n========================= Tethering =========================\n" + tetherResult);
 			x = ("Tethering - Done");
 			selectedNode.setUserObject(x);
 			updateResultTreeUI();
@@ -709,9 +694,7 @@ public class FiltersTree extends JTree
 					addCustomResult(nodeName, "RepOutput");
 				
 				result = filter.getHeader() + result + "\n";
-				SharedObjs.setResult(SharedObjs.getResult()
-									 + "\n\n\n========================= " + filter.getName() + " =========================\n"
-									 + result);
+				SharedObjs.setResult(SharedObjs.getResult() + "\n\n\n========================= " + filter.getName() + " =========================\n" + result);
 				x = (nodeName + " - Done");
 				selectedNode.setUserObject(x);
 				updateResultTreeUI();
@@ -842,8 +825,7 @@ public class FiltersTree extends JTree
 		{
 			Logger.log(Logger.TAG_FILTERSRESULTSTREE, "No: " + rootNode.getChildAt(i).toString());
 			
-			if (rootNode.getChildAt(i).toString().replace(" - Done", "").replace(" - Error", "")
-						.replace(" - Running", "").equals(name))
+			if (rootNode.getChildAt(i).toString().replace(" - Done", "").replace(" - Error", "").replace(" - Running", "").equals(name))
 			{
 				Logger.log(Logger.TAG_FILTERSRESULTSTREE, "achou");
 				rootNode.remove(i);
@@ -854,22 +836,15 @@ public class FiltersTree extends JTree
 	
 	private boolean showResultOnTextPane(DefaultMutableTreeNode node)
 	{
-		if (!SharedObjs.parserPane.getResultsTxtPane().isFocusOwner()
-			|| SharedObjs.parserPane.getResultsTxtPane().getText().isEmpty())
+		if (!SharedObjs.parserPane.isResultsTxtPaneFocusOwner() || SharedObjs.parserPane.getResultText().isEmpty())
 		{
-			Logger.log(Logger.TAG_FILTERSRESULTSTREE, "ResultsTxtPane on focus? "
-													  + SharedObjs.parserPane.getResultsTxtPane()
-																			 .isFocusOwner());
-			Logger.log(Logger.TAG_FILTERSRESULTSTREE, "ResultsTxtPane is empty? "
-													  + SharedObjs.parserPane.getResultsTxtPane().getText()
-																			 .isEmpty());
+			Logger.log(Logger.TAG_FILTERSRESULTSTREE, "ResultsTxtPane on focus? " + SharedObjs.parserPane.isResultsTxtPaneFocusOwner());
+			Logger.log(Logger.TAG_FILTERSRESULTSTREE, "ResultsTxtPane is empty? " + SharedObjs.parserPane.getResultText().isEmpty());
 			
-			DefaultMutableTreeNode nodeSelected = (DefaultMutableTreeNode) SharedObjs.parserPane.getFiltersResultsTree()
-																								.getLastSelectedPathComponent();
+			DefaultMutableTreeNode nodeSelected = (DefaultMutableTreeNode) SharedObjs.parserPane.getFiltersTree().getLastSelectedPathComponent();
 			
 			Logger.log(Logger.TAG_FILTERSRESULTSTREE, "Node received by the method: " + node.toString());
-			Logger.log(Logger.TAG_FILTERSRESULTSTREE,
-					   "Node selected on the result tree: " + nodeSelected.toString());
+			Logger.log(Logger.TAG_FILTERSRESULTSTREE, "Node selected on the result tree: " + nodeSelected.toString());
 			
 			if (node.toString().equals(nodeSelected.toString()))
 			{
@@ -925,13 +900,10 @@ public class FiltersTree extends JTree
 				
 				else
 				{
-					int index = SharedObjs.getActiveFiltersList().indexOfName(node.toString()
-																			.replace(" - Done", "")
-																			.replace(" - Error", ""));
+					int index = SharedObjs.getActiveFiltersList().indexOfName(node.toString().replace(" - Done", "").replace(" - Error", ""));
 					if (index > -1)
 					{
-						SharedObjs.parserPane.setResultsTxtPaneText(SharedObjs.getActiveFiltersList().get(index)
-																		  .getResult());
+						SharedObjs.parserPane.setResultsTxtPaneText(SharedObjs.getActiveFiltersList().get(index).getResult());
 						return true;
 					}
 				}
@@ -948,12 +920,12 @@ public class FiltersTree extends JTree
 		if (selectedNode != null)
 		{
 			if (!selectedNode.toString().contains("On Colors"))
-				ColorPrinter.resetPanelStyle(SharedObjs.parserPane.getResultsTxtPane());
+				ColorPrinter.resetPanelStyle(SharedObjs.parserPane.getResultTxtPane());
 			
 			switch (selectedNode.getLevel())
 			{
 				case 0: // Root selected
-					SharedObjs.parserPane.showAllLogResults();
+					SharedObjs.parserController.showAllLogResults();
 					Logger.log(Logger.TAG_FILTERSRESULTSTREE, "Showing all results.");
 					break;
 				case 1: // Leaf filter selected
@@ -1103,9 +1075,7 @@ public class FiltersTree extends JTree
 					}
 					else
 					{
-						int index = SharedObjs.getActiveFiltersList()
-											  .indexOfName(selectedNode.toString().replace(" - Done", "")
-																   .replace(" - Error", ""));
+						int index = SharedObjs.getActiveFiltersList().indexOfName(selectedNode.toString().replace(" - Done", "").replace(" - Error", ""));
 						if (index >= 0)
 						{
 							if (selectedNode.getChildCount() == 0 && !selectedNode.toString().contains(" - Running"))
@@ -1121,9 +1091,7 @@ public class FiltersTree extends JTree
 							}
 							else
 							{
-								SharedObjs.parserPane.setResultsTxtPaneText(SharedObjs.getActiveFiltersList()
-																				  .get(index)
-																				  .getResult());
+								SharedObjs.parserPane.setResultsTxtPaneText(SharedObjs.getActiveFiltersList().get(index).getResult());
 							}
 						}
 					}
@@ -1131,7 +1099,7 @@ public class FiltersTree extends JTree
 				case 2: // A filter child selected
 					DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) selectedNode.getParent();
 					
-					if (parentNode.toString().contains("Alarm"))
+					if (parentNode.toString().startsWith("Alarms"))
 					{
 						if (parentNode.toString().contains("Error"))
 						{
@@ -1143,23 +1111,17 @@ public class FiltersTree extends JTree
 							
 							if (selectedNode.toString().contains("On Colors"))
 							{
-								ColorPrinter.colorsAlarm(SharedObjs.parserPane.getResultsTxtPane(),
-								                         Alarm.getResult());
+								ColorPrinter.colorsAlarm(SharedObjs.parserPane.getResultTxtPane(), Alarm.getResult());
 								break;
 							}
 							else
 							{
 								SharedObjs.parserPane.setResultsTxtPaneText(SharedObjs.optionsPane.getTextAlarms()
-																							  .replace("#pname#",
-																									   Alarm.getList()
-																											.get(nodeIndex - 1)
-																											.getProcess())
-																							  .replace("#log#",
-																									   Alarm.getList()
-																											.get(nodeIndex - 1)
-																											.toString())
-																							  .replace("\\n",
-																									   "\n"));
+								                                                                  .replace("#pname#",
+								                                                                           Alarm.getList().get(nodeIndex - 1).getProcess())
+								                                                                  .replace("#log#",
+								                                                                           Alarm.getList().get(nodeIndex - 1).toString())
+								                                                                  .replace("\\n", "\n"));
 								break;
 							}
 						}
@@ -1209,16 +1171,11 @@ public class FiltersTree extends JTree
 							
 							if (selectedNode.toString().contains("On Colors"))
 							{
-								ColorPrinter.colorsApps(SharedObjs.parserPane.getResultsTxtPane(),
-														Consume.getResult());
+								ColorPrinter.colorsApps(SharedObjs.parserPane.getResultTxtPane(), Consume.getResult());
 							}
 							else
 							{
-								SharedObjs.parserPane.setResultsTxtPaneText("{panel}\n"
-																		+ Consume.getHCList()
-																				 .get(nodeIndex - 1)
-																				 .toString()
-																		+ "{panel}");
+								SharedObjs.parserPane.setResultsTxtPaneText("{panel}\n" + Consume.getHCList().get(nodeIndex - 1).toString() + "{panel}");
 							}
 						}
 					}
@@ -1242,9 +1199,7 @@ public class FiltersTree extends JTree
 						else
 						{
 							int nodeIndex = parentNode.getIndex(selectedNode);
-							SharedObjs.parserPane.setResultsTxtPaneText(Suspicious.getWakeLocks()
-																			  .get(nodeIndex)
-																			  .toString());
+							SharedObjs.parserPane.setResultsTxtPaneText(Suspicious.getWakeLocks().get(nodeIndex).toString());
 						}
 					}
 					else if (parentNode.toString().contains("Tethering"))
@@ -1260,9 +1215,7 @@ public class FiltersTree extends JTree
 					}
 					else
 					{
-						int index = SharedObjs.getActiveFiltersList()
-											  .indexOfName(parentNode.toString().replace(" - Done", "")
-																 .replace(" - Error", ""));
+						int index = SharedObjs.getActiveFiltersList().indexOfName(parentNode.toString().replace(" - Done", "").replace(" - Error", ""));
 						
 						if (index >= 0)
 						{
@@ -1289,84 +1242,50 @@ public class FiltersTree extends JTree
 					
 					if (parentNode.toString().contains("Alarms"))
 					{
-						ColorPrinter.colorsAlarm(SharedObjs.parserPane.getResultsTxtPane(),
-												 SharedObjs.optionsPane.getTextAlarms()
-																	   .replace("#pname#",
-																				Alarm.getList()
-																					 .get(nodeIndex - 1)
-																					 .getProcess())
-																	   .replace("#log#",
-																				Alarm.getList()
-																					 .get(nodeIndex - 1)
-																					 .toString())
-																	   .replace("\\n", "\n"));
+						ColorPrinter.colorsAlarm(SharedObjs.parserPane.getResultTxtPane(),
+						                         SharedObjs.optionsPane.getTextAlarms().replace("#pname#", Alarm.getList().get(nodeIndex - 1).getProcess())
+						                                               .replace("#log#", Alarm.getList().get(nodeIndex - 1).toString()).replace("\\n", "\n"));
 					}
 					else if (parentNode.toString().contains("High Consumption"))
 					{
 						if (selectedNode.toString().contains("ON"))
 							SharedObjs.parserPane.setResultsTxtPaneText(SharedObjs.optionsPane.getTextConsumeOn()
-																						  .replaceAll("#pname#",
-																									  Consume.getHCList()
-																											 .get(nodeIndex - 1)
-																											 .getProcess())
-																						  .replaceAll("#sconconsume#",
-																									  String.valueOf(Consume.getHCList()
-																															.get(nodeIndex - 1)
-																															.getScOnConsume()))
-																						  .replaceAll("#logon#",
-																									  Consume.getHCList()
-																											 .get(nodeIndex - 1)
-																											 .getLogOn())
-																						  .replace("\\n",
-																								   "\n"));
+							                                                                  .replaceAll("#pname#",
+							                                                                              Consume.getHCList().get(nodeIndex - 1).getProcess())
+							                                                                  .replaceAll("#sconconsume#",
+							                                                                              String.valueOf(Consume.getHCList().get(nodeIndex - 1)
+							                                                                                                    .getScOnConsume()))
+							                                                                  .replaceAll("#logon#",
+							                                                                              Consume.getHCList().get(nodeIndex - 1).getLogOn())
+							                                                                  .replace("\\n", "\n"));
 						else if (selectedNode.toString().contains("OFF"))
 							SharedObjs.parserPane.setResultsTxtPaneText(SharedObjs.optionsPane.getTextConsumeOff()
-																						  .replaceAll("#pname#",
-																									  Consume.getHCList()
-																											 .get(nodeIndex - 1)
-																											 .getProcess())
-																						  .replaceAll("#scoffconsume#",
-																									  String.valueOf(Consume.getHCList()
-																															.get(nodeIndex - 1)
-																															.getScOffConsume()))
-																						  .replaceAll("#logoff#",
-																									  Consume.getHCList()
-																											 .get(nodeIndex - 1)
-																											 .getLogOff())
-																						  .replace("\\n",
-																								   "\n"));
+							                                                                  .replaceAll("#pname#",
+							                                                                              Consume.getHCList().get(nodeIndex - 1).getProcess())
+							                                                                  .replaceAll("#scoffconsume#",
+							                                                                              String.valueOf(Consume.getHCList().get(nodeIndex - 1)
+							                                                                                                    .getScOffConsume()))
+							                                                                  .replaceAll("#logoff#",
+							                                                                              Consume.getHCList().get(nodeIndex - 1).getLogOff())
+							                                                                  .replace("\\n", "\n"));
 						else if (selectedNode.toString().contains("Full"))
 							SharedObjs.parserPane.setResultsTxtPaneText(SharedObjs.optionsPane.getTextConsumeFull()
-																						  .replaceAll("#pname#",
-																									  Consume.getHCList()
-																											 .get(nodeIndex - 1)
-																											 .getProcess())
-																						  .replaceAll("#avgconsume#",
-																									  String.valueOf(Consume.getHCList()
-																															.get(nodeIndex - 1)
-																															.getConsumeAvg()))
-																						  .replaceAll("#logfull#",
-																									  Consume.getHCList()
-																											 .get(nodeIndex - 1)
-																											 .getLog())
-																						  .replace("\\n",
-																								   "\n"));
+							                                                                  .replaceAll("#pname#",
+							                                                                              Consume.getHCList().get(nodeIndex - 1).getProcess())
+							                                                                  .replaceAll("#avgconsume#",
+							                                                                              String.valueOf(Consume.getHCList().get(nodeIndex - 1)
+							                                                                                                    .getConsumeAvg()))
+							                                                                  .replaceAll("#logfull#",
+							                                                                              Consume.getHCList().get(nodeIndex - 1).getLog())
+							                                                                  .replace("\\n", "\n"));
 						else
-							ColorPrinter.colorsApps(SharedObjs.parserPane.getResultsTxtPane(),
-													SharedObjs.optionsPane.getTextConsumeFull()
-																		  .replaceAll("#pname#",
-																					  Consume.getHCList()
-																							 .get(nodeIndex - 1)
-																							 .getProcess())
-																		  .replaceAll("#avgconsume#",
-																					  String.valueOf(Consume.getHCList()
-																											.get(nodeIndex - 1)
-																											.getConsumeAvg()))
-																		  .replaceAll("#logfull#",
-																					  Consume.getHCList()
-																							 .get(nodeIndex - 1)
-																							 .getLog())
-																		  .replace("\\n", "\n"));
+							ColorPrinter.colorsApps(SharedObjs.parserPane.getResultTxtPane(),
+							                        SharedObjs.optionsPane.getTextConsumeFull()
+							                                              .replaceAll("#pname#", Consume.getHCList().get(nodeIndex - 1).getProcess())
+							                                              .replaceAll("#avgconsume#",
+							                                                          String.valueOf(Consume.getHCList().get(nodeIndex - 1).getConsumeAvg()))
+							                                              .replaceAll("#logfull#", Consume.getHCList().get(nodeIndex - 1).getLog())
+							                                              .replace("\\n", "\n"));
 					}
 					break;
 				

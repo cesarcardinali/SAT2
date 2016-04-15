@@ -9,47 +9,54 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
-import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
-import javax.swing.undo.UndoManager;
 
 import style.NonWrappingTextPane;
-import core.SharedObjs;
-import customobjects.FileTree;
-import customobjects.FiltersTree;
+import views.custom_components.FileTree;
+import views.custom_components.FiltersTree;
 
 
 @SuppressWarnings("serial")
 public class ParserPane extends JPanel
 {
-	private UndoManager         undoManager;
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Variables -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	private JSplitPane          splitPane;
+	private JSplitPane          splitPane_1;
 	private FileTree            fileTree;
 	private FiltersTree         filtersTree;
 	private NonWrappingTextPane resultTxtPane;
 	
-	/**
-	 * Create the panel.
-	 */
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Constructor -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	public ParserPane()
 	{
 		setMinimumSize(new Dimension(800, 600));
 		GridBagLayout layout = new GridBagLayout();
-		layout.columnWidths = new int[] {250, 600};
+		layout.columnWidths = new int[] {0};
 		layout.rowHeights = new int[] {30, 300};
 		layout.rowWeights = new double[] {0.0, 1.0};
-		layout.columnWeights = new double[] {1.0, 1.0};
+		layout.columnWeights = new double[] {1.0};
 		setLayout(layout);
 		
+		splitPane_1 = new JSplitPane();
+		splitPane_1.setLastDividerLocation(200);
+		GridBagConstraints gbc_splitPane_1 = new GridBagConstraints();
+		gbc_splitPane_1.fill = GridBagConstraints.BOTH;
+		gbc_splitPane_1.gridx = 0;
+		gbc_splitPane_1.gridy = 1;
+		add(splitPane_1, gbc_splitPane_1);
+		
 		JScrollPane scrollPane = new JScrollPane();
+		splitPane_1.setRightComponent(scrollPane);
 		scrollPane.setToolTipText("Result of the selected parser item on the left");
 		scrollPane.setFont(new Font("Consolas", Font.PLAIN, 12));
 		scrollPane.setBorder(new LineBorder(new Color(102, 153, 204)));
@@ -61,7 +68,19 @@ public class ParserPane extends JPanel
 		scrollPane.setMinimumSize(new Dimension(400, 400));
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		
+		resultTxtPane = new NonWrappingTextPane();
+		resultTxtPane.setBorder(null);
+		resultTxtPane.setToolTipText("Result of the selected parser item on the left");
+		resultTxtPane.setContentType("text/plain");
+		resultTxtPane.setMargin(new Insets(7, 2, 7, 2));
+		resultTxtPane.setForeground(new Color(0, 0, 0));
+		resultTxtPane.setFont(new Font("Consolas", Font.PLAIN, 11));
+		resultTxtPane.setText("");
+		
+		scrollPane.setViewportView(resultTxtPane);
+		
 		splitPane = new JSplitPane();
+		splitPane_1.setLeftComponent(splitPane);
 		splitPane.setDividerSize(8);
 		splitPane.setBorder(null);
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
@@ -76,120 +95,59 @@ public class ParserPane extends JPanel
 		scrollFiltersResults.setViewportView(filtersTree);
 		scrollFiltersResults.setMinimumSize(new Dimension(150, 150));
 		splitPane.setLeftComponent(scrollFiltersResults);
-		GridBagConstraints gbc_splitPane = new GridBagConstraints();
-		gbc_splitPane.insets = new Insets(0, 5, 10, 5);
-		gbc_splitPane.fill = GridBagConstraints.BOTH;
-		gbc_splitPane.gridx = 0;
-		gbc_splitPane.gridy = 1;
-		add(splitPane, gbc_splitPane);
 		splitPane.setDividerLocation(300);
+		splitPane_1.setDividerLocation(200);
 		
-		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-		gbc_scrollPane.insets = new Insets(0, 10, 10, 10);
-		gbc_scrollPane.weighty = 22.0;
-		gbc_scrollPane.weightx = 15.0;
-		gbc_scrollPane.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane.gridx = 1;
-		gbc_scrollPane.gridy = 1;
-		add(scrollPane, gbc_scrollPane);
-		
-		resultTxtPane = new NonWrappingTextPane();
-		resultTxtPane.setBorder(null);
-		resultTxtPane.setToolTipText("Result of the selected parser item on the left");
-		resultTxtPane.setContentType("text/plain");
-		resultTxtPane.setMargin(new Insets(7, 2, 7, 2));
-		resultTxtPane.setForeground(new Color(0, 0, 0));
-		resultTxtPane.setFont(new Font("Consolas", Font.PLAIN, 11));
-		resultTxtPane.setText("");
-		
-		scrollPane.setViewportView(resultTxtPane);
-		
-		initPane();
+		// initPane();
 	}
 	
-	
-	
-	
-	
-	private void initPane()
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Add Listeners ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	public void resultTxtPaneAddUndoableEditListener(UndoableEditListener ul)
 	{
-		undoManager = new UndoManager();
-		resultTxtPane.getDocument().addUndoableEditListener(new UndoableEditListener()
-		{
-			@Override
-			public void undoableEditHappened(UndoableEditEvent e)
-			{
-				undoManager.addEdit(e.getEdit());
-			}
-		});
-		
-		resultTxtPane.addMouseListener(new MouseAdapter()
-		{
-			@Override
-			public void mouseClicked(MouseEvent e)
-			{
-				if (SwingUtilities.isRightMouseButton(e))
-				{
-				}
-			}
-		});
-		
-		SharedObjs.setResult("");
-		setResultsTxtPaneText("");
+		resultTxtPane.getDocument().addUndoableEditListener(ul);
 	}
 	
+	public void resultTxtPaneAddMouseListener(MouseAdapter ml)
+	{
+		resultTxtPane.addMouseListener(ml);
+	}
 	
-	public void setResultTextPaneKeyListener(KeyListener kl)
+	public void resultTextPaneAddKeyListener(KeyListener kl)
 	{
 		resultTxtPane.addKeyListener(kl);
 	}
 	
-	/**
-	 * Reset pane UI to initial state
-	 */
-	public void clearPane()
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Supportive methods ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	public void setResultsTxtPaneCaretPosition(int pos)
 	{
-		filtersTree.clearTree();
-		resultTxtPane.setText(""); // reset the text pane
-		SharedObjs.setResult(""); // reset the result for the filters
+		resultTxtPane.setCaretPosition(pos);
 	}
 	
-	
-	/**
-	 * Show all log results on the results pane
-	 */
-	public void showAllLogResults()
+	public Object getLastSelectedFilterObject()
 	{
-		while (SharedObjs.getResult().charAt(0) == '\n')
-		{
-			SharedObjs.setResult(SharedObjs.getResult().substring(1));
-		}
-		resultTxtPane.setText(SharedObjs.getResult());
-		resultTxtPane.setCaretPosition(0);
+		return filtersTree.getLastSelectedPathComponent();
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	public void undo()
+	public Boolean isResultsTxtPaneFocusOwner()
 	{
-		undoManager.undo();
+		return resultTxtPane.isFocusOwner();
 	}
 	
-	// Getters and Setters
-	public FiltersTree getFiltersResultsTree()
+	public void setResultsTxtPaneTextWrap(Boolean bool)
+	{
+		resultTxtPane.setWrapText(bool);
+	}
+	
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Getters/Setters -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	public FiltersTree getFiltersTree()
 	{
 		return filtersTree;
-	}
-	
-	public NonWrappingTextPane getResultsTxtPane()
-	{
-		return resultTxtPane;
 	}
 	
 	public void setResultsTxtPaneText(String text)
@@ -198,13 +156,15 @@ public class ParserPane extends JPanel
 		resultTxtPane.setCaretPosition(0);
 	}
 	
-	public Object getLastSelectedFilterObject()
-	{
-		return filtersTree.getLastSelectedPathComponent();
-	}
-	
 	public String getResultText()
 	{
 		return resultTxtPane.getText();
 	}
+
+	public NonWrappingTextPane getResultTxtPane()
+	{
+		return resultTxtPane;
+	}
+	
+	
 }

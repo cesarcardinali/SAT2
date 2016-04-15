@@ -1,4 +1,4 @@
-package customobjects;
+package views.custom_components;
 
 
 import java.awt.Color;
@@ -95,35 +95,21 @@ public class FileTree extends JPanel
 							{
 								lastDirectory = node.toString();
 								SharedObjs.setCrPath(file.getAbsolutePath() + "\\");
-								SharedObjs.parserPane.clearPane();
+								SharedObjs.parserController.clearPane();
 							}
 						}
 					}
 				}
 				
-				// Calling updateUI causes the tree's UI to be
-				// uninstalled and then a new one installed. The
-				// developer
-				// is calling this method in the middle of events
-				// being dispatched, some of which go to the UI.
-				// Because
-				// the events are already being dispatched, they will
-				// still go to the uninstalled UI which no longer has
-				// reference to the tree. If the developer really
-				// wants this behavior, they can wrap the call to
-				// updateUI
-				// in a SwingUtilities.invokeLater(). This method
-				// allows us to post a "job" to Swing, which it will
-				// then
-				// run on the event dispatch thread at its next
-				// convenience.
+				// Calling updateUI causes the tree's UI to be uninstalled and then a new one installed. The developer is calling this method in the middle of events
+				// being dispatched, some of which go to the UI. Because the events are already being dispatched, they will still go to the uninstalled UI which no longer has
+				// reference to the tree. If the developer really wants this behavior, they can wrap the call to updateUI in a SwingUtilities.invokeLater(). This method
+				// allows us to post a "job" to Swing, which it will then run on the event dispatch thread at its next convenience.
 				SwingUtilities.invokeLater(new Runnable()
 				{
 					public void run()
 					{
-						// Here, we can safely update the GUI
-						// because we'll be called from the
-						// event dispatch thread
+						// Here, we can safely update the GUI because we'll be called from the event dispatch thread
 						fileTree.updateUI();
 					}
 				});
@@ -147,9 +133,6 @@ public class FileTree extends JPanel
 				{
 					public void run()
 					{
-						// Here, we can safely update the GUI
-						// because we'll be called from the
-						// event dispatch thread
 						fileTree.updateUI();
 					}
 				});

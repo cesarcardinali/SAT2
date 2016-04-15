@@ -152,5 +152,38 @@
     </item_4>
   </sharedFilters>
   <!-- Active filters: ! -->
-  <activeFilters />
+  <activeFilters>
+    <item_1>
+      <name>BR-Network</name>
+      <regex>.*DATA_REGISTRATION_.*</regex>
+      <header>Data registration info:</header>
+      <owner>cesarc</owner>
+      <main>false</main>
+      <system>false</system>
+      <kernel>false</kernel>
+      <radio>false</radio>
+      <bugreport>true</bugreport>
+      <routput>false</routput>
+      <shared>false</shared>
+      <editable>false</editable>
+      <active>false</active>
+      <last_update>2016-04-07 10:30:08</last_update>
+    </item_1>
+    <item_2>
+      <name>BR-Alarm</name>
+      <regex>.*AlarmManager: send.*</regex>
+      <header>Alarms info</header>
+      <owner>cesarc</owner>
+      <main>false</main>
+      <system>false</system>
+      <kernel>false</kernel>
+      <radio>false</radio>
+      <bugreport>true</bugreport>
+      <routput>false</routput>
+      <shared>false</shared>
+      <editable>false</editable>
+      <active>false</active>
+      <last_update>2016-04-07 10:30:07</last_update>
+    </item_2>
+  </activeFilters>
 </SAT>

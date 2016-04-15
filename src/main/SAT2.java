@@ -170,8 +170,8 @@ public class SAT2 extends JFrame
 				{
 					Logger.log(Logger.TAG_SAT, "Saving all user data ...");
 					SharedObjs.crsManagerController.saveUIData();
-					SharedObjs.parserController.savePaneData();
-					SharedObjs.optionsController.saveViewData();
+					SharedObjs.parserController.saveUIData();
+					SharedObjs.optionsController.saveUIData();
 					SharedObjs.updateUidsXML();
 					run = 1;
 					Logger.log(Logger.TAG_SAT, "Done");
