@@ -13,8 +13,8 @@ import core.SharedObjs;
 @SuppressWarnings("unused")
 public class OldCRsCloser implements Runnable
 {
-	String[]           crs;
-	ArrayList<String>           noLabels;
+	private String[]           crs;
+	private ArrayList<String>  noLabels;
 	private JiraSatApi jira;
 	
 	public OldCRsCloser(String[] crs)
@@ -32,9 +32,8 @@ public class OldCRsCloser implements Runnable
 		Object[] options = {"It's OK. Go!", "Cancel, I need to check"};
 		int n = JOptionPane.showOptionDialog(SharedObjs.crsManagerPane,
 		                                     "Please, make sure that your username and password are set correctly at \"CRs and Jira\" tab. Otherwise, cancel this window and "
-		                                                     + "check your login data.", "Warning",
-		                                     JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
-		                                     null, options, options[1]);
+		                                                     + "check your login data.", "Warning", JOptionPane.YES_NO_CANCEL_OPTION,
+		                                     JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 		Logger.log(Logger.TAG_CRSCLOSER, "Resposta: " + n);
 		
 		if (n == 0)
@@ -47,13 +46,13 @@ public class OldCRsCloser implements Runnable
 				SharedObjs.addLogLine("Assigning " + cr);
 				jira.assignIssue(cr);
 				try
-                {
-	                Thread.sleep(500);
-                }
-                catch (InterruptedException e)
-                {
-	                e.printStackTrace();
-                }
+				{
+					Thread.sleep(500);
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
 				
 				if (SharedObjs.crsManagerModel.getLabels().length > 0)
 				{
