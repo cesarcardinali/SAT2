@@ -165,6 +165,12 @@ public class BtdParser
 			Logger.log(Logger.TAG_BTD_PARSER, "Getting general data");
 			getDischargeGeneralData(finalState);
 			
+			if (status < 0)
+			{
+				Logger.log(Logger.TAG_BTD_PARSER, "BTD file could not be parsed");
+				return false;
+			}
+			
 			Logger.log(Logger.TAG_BTD_PARSER, "Getting discharge battery data");
 			getDischargeBatteryData(finalState);
 			
@@ -309,8 +315,7 @@ public class BtdParser
 		/*
 		 * for (BtdWL item : kernelWLs) { if (item.getName().contains("PowerManagerService.Display")) continue;
 		 * 
-		 * if (getPercentage(item.getLongerPeriod(), realTimeOnBatt) > 5 && item.getLongerPeriod() >= 30 * 60000) return true; else return
-		 * false; }
+		 * if (getPercentage(item.getLongerPeriod(), realTimeOnBatt) > 5 && item.getLongerPeriod() >= 30 * 60000) return true; else return false; }
 		 */
 		// Updated to 45 from 30
 		if (kernelWLs.getLongerWL() != null && getPercentage(kernelWLs.getLongerWL().getLongerPeriod(), realTimeOnBatt) > 7
@@ -347,6 +352,9 @@ public class BtdParser
 		
 		try
 		{
+			if (finalState.getStart() >= finalState.getEnd())
+				return 0;
+			
 			rs = execQuery("select CELL_TX, WIFI_RX, timestamp from t_fgdata where timestamp BETWEEN " + finalState.getStart() + " AND " + finalState.getEnd()
 			               + " AND WIFI_LABEL = ''  AND CELL_LABEL != '';");
 			
@@ -393,12 +401,15 @@ public class BtdParser
 			
 			tetheringTime = cumulativeTime;
 			
+			if (cumulativeTime < 0)
+				cumulativeTime = 0;
+			
 			return cumulativeTime;
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
-			return -1;
+			return 0; // -1
 		}
 	}
 	
@@ -460,7 +471,8 @@ public class BtdParser
 	private void getDischargeInternetData(BtdState finalState)
 	{
 		String[][] results = getMinMaxDiffData(new String[] {"CELL_TX", "CELL_RX", "WIFI_TX", "WIFI_RX", "GpsLocCount", "NetworkLocCount"}, new long[] {
-		        finalState.getStart(), finalState.getEnd()});
+		        finalState.getStart(),
+		        finalState.getEnd()});
 		
 		// RX/TX data in BTD is swapped, so, we need to swap them here
 		cellRX = Long.parseLong(results[0][2]) / 1024; // divided by 1024 to change from Bytes to KBytes
@@ -473,8 +485,14 @@ public class BtdParser
 	
 	private void getDischargeGeneralData(BtdState finalState)
 	{
-		String[][] results = getTopBottomData(new String[] {"BATTERY_LEVEL", "ActivePhoneCallTime", "RealTimeOnBatt", "AwakeTimeOnBatt", "WifiOnTime",
-		        "WifiRunningTime", "FCC"}, new long[] {finalState.getStart(), finalState.getEnd()});
+		String[][] results = getTopBottomData(new String[] {
+		        "BATTERY_LEVEL",
+		        "ActivePhoneCallTime",
+		        "RealTimeOnBatt",
+		        "AwakeTimeOnBatt",
+		        "WifiOnTime",
+		        "WifiRunningTime",
+		        "FCC"}, new long[] {finalState.getStart(), finalState.getEnd()});
 		
 		bttDischarged[0] = Integer.parseInt(results[0][0]);
 		bttDischarged[1] = Integer.parseInt(results[0][1]);
@@ -484,6 +502,9 @@ public class BtdParser
 		wifiOnTime = getMillisFromBtdStringDate(results[4][1]) - getMillisFromBtdStringDate(results[4][0]);
 		wifiRunningTime = getMillisFromBtdStringDate(results[5][1]) - getMillisFromBtdStringDate(results[5][0]);
 		batCap = Integer.parseInt(results[6][0]);
+		
+		if (realTimeOnBatt < 0 || awakeTimeOnBatt < 0)
+			status = -1;
 	}
 	
 	private void getDischargePhoneSignalData(BtdState finalState)
@@ -1552,7 +1573,17 @@ public class BtdParser
 					btdState.setStart(rs.getLong(1));
 					btdState.setEnd(rs.getLong(2));
 					btdState.setStatus(rs.getInt(3));
-					statesData.add(btdState);
+					
+					if (btdState.getEnd() < btdState.getStart() || btdState.getDuration() < 0)
+					{
+						SharedObjs.addLogLine("This BTD contains data errors. Some inconsistent periods will be ignored.");
+						SharedObjs.addLogLine("Is recommended to check it for date errors and periods without data.");
+						rs = null;
+					}
+					else
+					{
+						statesData.add(btdState);
+					}
 				}
 				else
 				{
@@ -1571,7 +1602,15 @@ public class BtdParser
 	public BtdState getLongerDischargingPeriod()
 	{
 		if (statesData.size() == 0)
+		{
 			getPeriods();
+		}
+		
+		if (statesData.size() == 0)
+		{
+			status = -1;
+			return null;
+		}
 		
 		System.out.println("");
 		
@@ -1635,8 +1674,7 @@ public class BtdParser
 				while (rs.next())
 				{
 					/*
-					 * System.out.println("Campo: " + field); System.out.println("Min= " + rs.getString(1)); System.out.println("Max= " +
-					 * rs.getString(2));
+					 * System.out.println("Campo: " + field); System.out.println("Min= " + rs.getString(1)); System.out.println("Max= " + rs.getString(2));
 					 */
 					
 					minMaxResults[id][0] = rs.getString(1);
